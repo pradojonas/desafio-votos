@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import rh.southsystem.desafio.dto.VotingSessionDTO;
+import rh.southsystem.desafio.model.VotingSession;
 import rh.southsystem.desafio.service.VotingSessionService;
 
 @RestController
@@ -23,7 +24,7 @@ public class VotingSessionController {
     VotingSessionService service;
 
     @GetMapping
-    public List<VotingSessionDTO> list() {
+    public List<VotingSession> list() {
         try {
             return service.list();
         } catch (Exception e) {

@@ -24,12 +24,12 @@ public class VotingSessionService {
     @Autowired
     private AgendaRepository agendaRepo;
 
-    public List<VotingSessionDTO> list() {
+    public List<VotingSession> list() {
         var modelList = sessionRepo.findAll();
-        var dtoList   = modelList.stream()
-                                 .map(entity -> modelMapper.map(entity, VotingSessionDTO.class))
-                                 .collect(Collectors.toList());
-        return dtoList;
+//        var dtoList   = modelList.stream()
+//                                 .map(entity -> modelMapper.map(entity, VotingSessionDTO.class))
+//                                 .collect(Collectors.toList());
+        return modelList;
     }
 
     public VotingSessionDTO add(@RequestBody VotingSessionDTO newVotingSessionDTO) {
@@ -50,7 +50,7 @@ public class VotingSessionService {
     private void validateVotingSession(VotingSession newVotingSession) {
         if (newVotingSession.getAgenda() == null || newVotingSession.getAgenda().getId() == null)
             throw new IllegalArgumentException("VotingSession requires a valid Agenda.");
-        if (newVotingSession.getEndSession() == null)
+        if (newVotingSession.getEndSession() == null || newVotingSession.getEndSession().isBefore(LocalDateTime.now()))
             throw new IllegalArgumentException("VotingSession requires a valid endSession.");
     }
 
