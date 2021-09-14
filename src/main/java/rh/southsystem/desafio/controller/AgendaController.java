@@ -1,6 +1,7 @@
 package rh.southsystem.desafio.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,20 @@ public class AgendaController {
     private ModelMapper modelMapper;
 
     @GetMapping
-    public List<Agenda> list() {
-        return agendaRepo.findAll();
+    public List<AgendaDTO> list() {
+        var modelList = agendaRepo.findAll();
+        var dtoList   = modelList.stream()
+                                 .map(entity -> modelMapper.map(entity, AgendaDTO.class))
+                                 .collect(Collectors.toList());
+        return dtoList;
     }
 
     @PostMapping
     @ResponseStatus()
-    Agenda add(@RequestBody AgendaDTO newAgendaDTO) {
+    AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
         var newAgenda = modelMapper.map(newAgendaDTO, Agenda.class); // Transforming DTO in Entity
-        return agendaRepo.save(newAgenda);
+        agendaRepo.save(newAgenda);
+        return modelMapper.map(newAgenda, AgendaDTO.class);
     }
 
 }
