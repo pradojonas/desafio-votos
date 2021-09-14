@@ -1,10 +1,14 @@
 package rh.southsystem.desafio.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.sun.istack.NotNull;
@@ -13,8 +17,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Agenda")
-public class Agenda {
+@Table(name = "Session")
+public class Session {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +26,12 @@ public class Agenda {
     private Long id;
     
     @NotNull
-    @Column(name = "description", nullable = false)
-    private String description;
+    @Column(name = "dt_end_session", nullable = false)
+    private LocalDateTime endSession = LocalDateTime.now().plusMinutes(1); // Default session lasts for one minute
+    
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_agenda", nullable = false)
+    private Agenda agenda;
     
 }

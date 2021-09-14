@@ -13,8 +13,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Agenda")
-public class Agenda {
+@Table(name = "Associate")
+public class Associate {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,11 @@ public class Agenda {
     private Long id;
     
     @NotNull
-    @Column(name = "description", nullable = false)
-    private String description;
+    @Column(name = "name", nullable = false)
+    private String name;
+    
+    @NotNull
+    @Column(name = "cpf", nullable = false)
+    private String cpf;
     
 }
