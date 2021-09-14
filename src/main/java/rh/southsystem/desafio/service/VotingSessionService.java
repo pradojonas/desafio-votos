@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import rh.southsystem.desafio.dto.VotingSessionDTO;
+import rh.southsystem.desafio.mappers.VotingSessionMapper;
 import rh.southsystem.desafio.model.VotingSession;
 import rh.southsystem.desafio.repository.AgendaRepository;
 import rh.southsystem.desafio.repository.VotingSessionRepository;
@@ -18,18 +18,16 @@ import rh.southsystem.desafio.repository.VotingSessionRepository;
 public class VotingSessionService {
 
     @Autowired
-    private ModelMapper      modelMapper;
-    @Autowired
     private VotingSessionRepository sessionRepo;
     @Autowired
     private AgendaRepository agendaRepo;
 
-    public List<VotingSession> list() {
+    public List<VotingSessionDTO> list() {
         var modelList = sessionRepo.findAll();
-//        var dtoList   = modelList.stream()
-//                                 .map(entity -> modelMapper.map(entity, VotingSessionDTO.class))
-//                                 .collect(Collectors.toList());
-        return modelList;
+        var dtoList   = modelList.stream()
+                                 .map(entity -> VotingSessionMapper.INSTANCE.fromEntity(entity))
+                                 .collect(Collectors.toList());
+        return dtoList;
     }
 
     public VotingSessionDTO add(@RequestBody VotingSessionDTO newVotingSessionDTO) {
@@ -39,12 +37,12 @@ public class VotingSessionService {
             throw new IllegalArgumentException("Invalid agenda for Voting Session.");
         }
         
-        var newVotingSession = modelMapper.map(newVotingSessionDTO, VotingSession.class); // Transforming DTO in Entity
+        var newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaOpt.get());
         this.validateVotingSession(newVotingSession);
         // TODO: Handle constraints errors
         sessionRepo.save(newVotingSession);
-        return modelMapper.map(newVotingSession, VotingSessionDTO.class);
+        return VotingSessionMapper.INSTANCE.fromEntity(newVotingSession);
     }
     
     private void validateVotingSession(VotingSession newVotingSession) {

@@ -24,7 +24,7 @@ public class VotingSessionController {
     VotingSessionService service;
 
     @GetMapping
-    public List<VotingSession> list() {
+    public List<VotingSessionDTO> list() {
         try {
             return service.list();
         } catch (Exception e) {

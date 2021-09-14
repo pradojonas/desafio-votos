@@ -16,6 +16,7 @@
 	<description>Projeto desenvolvido para Processo Seletivo da SouthSystem</description>
 	<properties>
 		<java.version>11</java.version>
+		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,11 +50,11 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- MODEL MAPPER - Mapeamento de DTOs -->
+		<!-- Map Struct - Mapeamento de DTOs -->
 		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>2.4.4</version>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
 		</dependency>
 
 		<dependency>
@@ -89,6 +90,23 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>11</source> <!-- depending on your project -->
+					<target>111</target> <!-- depending on your project -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+						<!-- other annotation processors -->
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 		</plugins>
