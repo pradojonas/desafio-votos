@@ -19,32 +19,19 @@ public class ModelMapperConfig {
     public ModelMapper modelMapper() {
         var modelMapper = new ModelMapper();
 
-        Converter<Long, LocalDateTime> minutesToDateTimeConverter = ctx -> LocalDateTime.now()
-                                                                                        .plusMinutes(ctx.getSource());
+        Converter<Long, LocalDateTime>               minutesToDateTimeConverter = ctx -> LocalDateTime.now()
+                                                                                                      .plusMinutes(ctx.getSource());
+        PropertyMap<VotingSessionDTO, VotingSession> dtoMap                     = new PropertyMap<VotingSessionDTO, VotingSession>() {
+                                                                                    protected void
+                                                                                              configure() {
+                                                                                        using(minutesToDateTimeConverter).map(source.getMinutesDuration(),
+                                                                                                                              destination.getEndSession());
+                                                                                    }
+                                                                                };
+
         Converter<LocalDateTime, Long> dateTimeToMinutesConverter = ctx -> ChronoUnit.MINUTES.between(LocalDateTime.now(),
                                                                                                       ctx.getSource());
-
-        // TODO: Como implementar?
-        // PropertyMap<VotingSession, VotingSessionDTO> dateTimeToMinutes = new PropertyMap<VotingSession, VotingSessionDTO>() {
-        // protected void configure() {
-        // map().setMinutesDuration();
-        // }
-        // };
-
-        modelMapper
-        .addMappings(new PropertyMap<VotingSessionDTO, VotingSession>() {
-            protected void configure() {
-                using(minutesToDateTimeConverter).map(source.getMinutesDuration(),
-                                                      destination.getEndSession());
-            }
-        })
-//        .addMappings(new PropertyMap<VotingSession, VotingSessionDTO>() {
-//            protected void configure() {
-//                using(dateTimeToMinutesConverter).map(source.getEndSession(),
-//                                                      destination.getMinutesDuration());
-//            }
-//        })
-        ;
+        modelMapper.addMappings(dtoMap);
         return modelMapper;
     }
 }
