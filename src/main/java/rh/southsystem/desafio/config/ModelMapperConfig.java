@@ -4,9 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import rh.southsystem.desafio.dto.AgendaDTO;
-import rh.southsystem.desafio.model.Agenda;
-
 @Configuration
 public class ModelMapperConfig {
 

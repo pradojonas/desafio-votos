@@ -21,10 +21,9 @@ import rh.southsystem.desafio.repository.AgendaRepository;
 public class AgendaController {
 
     @Autowired
-    private AgendaRepository agendaRepo;
-
+    private ModelMapper      modelMapper;
     @Autowired
-    private ModelMapper modelMapper;
+    private AgendaRepository agendaRepo;
 
     @GetMapping
     public List<AgendaDTO> list() {
@@ -38,7 +37,9 @@ public class AgendaController {
     @PostMapping
     @ResponseStatus()
     AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
+        // TODO: Handle input errors
         var newAgenda = modelMapper.map(newAgendaDTO, Agenda.class); // Transforming DTO in Entity
+        // TODO: Handle constraints errors
         agendaRepo.save(newAgenda);
         return modelMapper.map(newAgenda, AgendaDTO.class);
     }
