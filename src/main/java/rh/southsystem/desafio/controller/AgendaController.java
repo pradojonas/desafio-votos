@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import rh.southsystem.desafio.AgendaService;
 import rh.southsystem.desafio.dto.AgendaDTO;
+import rh.southsystem.desafio.service.AgendaService;
 
 @RestController
 @RequestMapping("/agendas")

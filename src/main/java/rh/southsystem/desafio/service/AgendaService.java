@@ -1,4 +1,4 @@
-package rh.southsystem.desafio;
+package rh.southsystem.desafio.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
