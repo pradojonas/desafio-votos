@@ -33,7 +33,6 @@ public class AgendaService {
     public AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
         var newAgenda = modelMapper.map(newAgendaDTO, Agenda.class); // Transforming DTO in Entity
         this.validateAgenda(newAgenda);
-        // TODO: Handle constraints errors
         agendaRepo.save(newAgenda);
         return modelMapper.map(newAgenda, AgendaDTO.class);
     }

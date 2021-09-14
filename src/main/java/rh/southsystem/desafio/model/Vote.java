@@ -36,7 +36,7 @@ public class Vote {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_session", nullable = false)
-    private Session votingSession;
+    private VotingSession votingSession;
     
     @NotNull
     @Column(name = "vote", nullable = false)

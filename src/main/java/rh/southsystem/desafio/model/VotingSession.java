@@ -14,11 +14,13 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "Session")
-public class Session {
+public class VotingSession {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +28,7 @@ public class Session {
     private Long id;
     
     @NotNull
-    @Column(name = "dt_end_session", nullable = false)
+    @Column(name = "dt_end_session_UTC", nullable = false)
     private LocalDateTime endSession = LocalDateTime.now().plusMinutes(1); // Default session lasts for one minute
     
     @NotNull
