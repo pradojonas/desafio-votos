@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.google.common.base.Strings;
 
 import rh.southsystem.desafio.dto.AgendaDTO;
 import rh.southsystem.desafio.model.Agenda;
@@ -37,7 +38,7 @@ public class AgendaController {
                                      .collect(Collectors.toList());
             return dtoList;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
         }
     }
 
@@ -45,14 +46,22 @@ public class AgendaController {
     @ResponseStatus(HttpStatus.CREATED)
     AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
         try {
-            // TODO: Handle input errors
             var newAgenda = modelMapper.map(newAgendaDTO, Agenda.class); // Transforming DTO in Entity
+            this.validateAgenda(newAgenda);
             // TODO: Handle constraints errors
             agendaRepo.save(newAgenda);
             return modelMapper.map(newAgenda, AgendaDTO.class);
+
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
         }
+    }
+
+    private void validateAgenda(Agenda newAgenda) {
+        if (Strings.isNullOrEmpty(newAgenda.getDescription()))
+            throw new IllegalArgumentException("Agenda requires a description.");
     }
 
 }
