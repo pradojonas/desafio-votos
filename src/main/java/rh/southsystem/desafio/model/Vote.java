@@ -1,6 +1,6 @@
 package rh.southsystem.desafio.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,6 +48,6 @@ public class Vote {
 
     @NotNull
     @Column(name = "dt_vote", nullable = false)
-    private LocalDateTime dateVote = LocalDateTime.now();
+    private Instant dateVote = Instant.now();
 
 }

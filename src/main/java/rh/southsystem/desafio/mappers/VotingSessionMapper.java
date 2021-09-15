@@ -1,6 +1,6 @@
 package rh.southsystem.desafio.mappers;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import org.mapstruct.Mapper;
@@ -26,14 +26,15 @@ public interface VotingSessionMapper {
     VotingSessionDTO fromEntity(VotingSession s);
 
     @Named("durationMinutesToDateTime")
-    public static LocalDateTime durationMinutesToDateTime(Long minutesDuration) {
-        return LocalDateTime.now().plusMinutes(minutesDuration);
+    public static Instant durationMinutesToDateTime(Long minutesDuration) {
+        // TODO: Check if minutesDuration is negative
+        return Instant.now().plusSeconds(60 * minutesDuration);
     }
 
     @Named("dateTimeToRemainingMinutes")
-    public static Long dateTimeToRemainingMinutes(LocalDateTime endTime) {
+    public static Long dateTimeToRemainingMinutes(Instant endTime) {
         // Minus minutes to round up the remaining time
-        return ChronoUnit.MINUTES.between(LocalDateTime.now().minusMinutes(1), endTime);
+        return ChronoUnit.MINUTES.between(Instant.now().minusSeconds(60), endTime);
     }
 
     @Named("getIdAgenda")

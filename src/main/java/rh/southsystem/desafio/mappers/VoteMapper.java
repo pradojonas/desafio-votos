@@ -1,6 +1,6 @@
 package rh.southsystem.desafio.mappers;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,7 +23,7 @@ public interface VoteMapper {
     VoteDTO fromEntity(Vote a);
 
     @Named("now")
-    public static LocalDateTime durationMinutesToDateTime(DecisionEnum dummyParameter) {
-        return LocalDateTime.now();
+    public static Instant durationMinutesToDateTime(DecisionEnum dummyParameter) {
+        return Instant.now();
     }
 }

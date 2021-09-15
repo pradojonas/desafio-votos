@@ -1,6 +1,6 @@
 package rh.southsystem.desafio.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +50,7 @@ public class VotingSessionService {
 
     private void validateVotingSession(VotingSession newVotingSession) {
         if (newVotingSession.getEndSession() == null
-            || newVotingSession.getEndSession().isBefore(LocalDateTime.now()))
+            || newVotingSession.getEndSession().isBefore(Instant.now()))
             throw new IllegalArgumentException("VotingSession requires a valid endSession.");
     }
 

@@ -1,6 +1,6 @@
 package rh.southsystem.desafio.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +15,8 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import com.sun.istack.NotNull;
 
 import lombok.Data;
@@ -36,10 +36,10 @@ public class VotingSession {
 
     @NotNull
     @Column(name = "dt_end_session_UTC", nullable = false)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="JsonFormat.DEFAULT_TIMEZONE") // Commented for future reference
-    private LocalDateTime endSession = LocalDateTime.now().plusMinutes(1); // Default session lasts for one minute
+    private Instant endSession = Instant.now().plusSeconds(60); // Default session lasts for one minute
 
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)
