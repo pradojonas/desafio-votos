@@ -9,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rh.southsystem.desafio.dto.VoteDTO;
-import rh.southsystem.desafio.exceptions.DesafioException;
 import rh.southsystem.desafio.mappers.VoteMapper;
 import rh.southsystem.desafio.model.Vote;
 import rh.southsystem.desafio.repository.VoteRepository;
-import rh.southsystem.desafio.repository.VotingSessionRepository;
 
 @Service
 public class VoteService {
@@ -35,11 +33,13 @@ public class VoteService {
         return dtoList;
     }
 
-    public VoteDTO vote(VoteDTO newVoteDTO) throws DesafioException {
+    public VoteDTO vote(VoteDTO newVoteDTO) {
 
         // TODO: Check CPF using API
 
         Vote newVote = VoteMapper.INSTANCE.fromDTO(newVoteDTO); // Transforming DTO in Entity
+        validateVote(newVote);
+
         newVote.setVotingSession(voteService.getByID(newVoteDTO.getIdVotingSession()));
         try {
             newVote.setAssociate(associateService.getByCPF(newVoteDTO.getCpf()));
@@ -49,11 +49,16 @@ public class VoteService {
 
         this.validateVote(newVote);
 
+        // TODO: Persist Vote
+
         return null;
     }
 
     private void validateVote(Vote newVote) {
-        // TODO: Check if session is open
+        // Entity should be ready to persist
+        if (newVote.getVote() == null)
+            throw new IllegalArgumentException("Property 'vote' can't be null; please, answer with one of: ['SIM', 'NAO', '0', '1']");
+
     }
 
 }

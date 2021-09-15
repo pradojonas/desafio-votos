@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import rh.southsystem.desafio.dto.VoteDTO;
-import rh.southsystem.desafio.exceptions.DesafioException;
 import rh.southsystem.desafio.service.VoteService;
 
 @RestController
@@ -33,16 +32,13 @@ public class VoteController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    VoteDTO add(@RequestBody VoteDTO newVoteDTO) {
+    @ResponseStatus(HttpStatus.OK)
+    VoteDTO vote(@RequestBody VoteDTO newVoteDTO) {
         try {
             return service.vote(newVoteDTO);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (DesafioException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
         }
