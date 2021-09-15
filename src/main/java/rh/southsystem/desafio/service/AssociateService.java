@@ -41,8 +41,8 @@ public class AssociateService {
     }
 
     public Associate createAssociate(String cpf) {
-        // TODO: Create CPF (Premise: we already know that its not in database)
-        return null;
+        var newAssociate = new Associate(cpf); 
+        return associateRepo.save(newAssociate);
     }
 
 }

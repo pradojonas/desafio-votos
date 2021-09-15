@@ -17,10 +17,12 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import rh.southsystem.desafio.enums.DecisionEnum;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "Vote")
 public class Vote {
 

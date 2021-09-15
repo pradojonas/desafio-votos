@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import rh.southsystem.desafio.dto.VoteDTO;
 import rh.southsystem.desafio.mappers.VoteMapper;
+import rh.southsystem.desafio.model.Associate;
 import rh.southsystem.desafio.model.Vote;
 import rh.southsystem.desafio.repository.VoteRepository;
 
@@ -44,21 +45,23 @@ public class VoteService {
         try {
             newVote.setAssociate(associateService.getByCPF(newVoteDTO.getCpf()));
         } catch (EntityNotFoundException e) {
-            newVote.setAssociate(associateService.createAssociate(newVoteDTO.getCpf()));
+            Associate newAssociate = associateService.createAssociate(newVoteDTO.getCpf());
+            newVote.setAssociate(newAssociate);
         }
 
         this.validateVote(newVote);
-
-        // TODO: Persist Vote
-
-        return null;
+        voteRepo.save(newVote);
+        return VoteMapper.INSTANCE.fromEntity(newVote);
     }
 
     private void validateVote(Vote newVote) {
-        // Entity should be ready to persist
+        // Entity is ready to persist
         if (newVote.getVote() == null)
             throw new IllegalArgumentException("Property 'vote' can't be null; please, answer with one of: ['SIM', 'NAO', '0', '1']");
 
-    }
+        // TODO: Check if VotingSession is open
 
+        // TODO: Check if CPF has already voted
+
+    }
 }

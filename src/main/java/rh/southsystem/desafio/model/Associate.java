@@ -10,12 +10,14 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "Associate")
 public class Associate {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,4 +27,7 @@ public class Associate {
     @Column(name = "cpf", nullable = false)
     private String cpf;
     
+    public Associate(String cpf) {
+        this.cpf = cpf;
+    }
 }
