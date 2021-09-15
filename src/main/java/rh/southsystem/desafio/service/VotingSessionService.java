@@ -33,7 +33,7 @@ public class VotingSessionService {
         return dtoList;
     }
 
-    public VotingSessionDTO add(@RequestBody VotingSessionDTO newVotingSessionDTO) throws DesafioException {
+    public VotingSessionDTO add(VotingSessionDTO newVotingSessionDTO) throws DesafioException {
 
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.dtoToEntity(newVotingSessionDTO,
                                                                                   agendaRepo); // Transforming DTO in Entity

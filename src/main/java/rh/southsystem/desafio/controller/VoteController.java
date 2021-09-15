@@ -12,18 +12,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import rh.southsystem.desafio.dto.AgendaDTO;
-import rh.southsystem.desafio.service.AgendaService;
+import rh.southsystem.desafio.dto.VoteDTO;
+import rh.southsystem.desafio.exceptions.DesafioException;
+import rh.southsystem.desafio.service.VoteService;
 
 @RestController
-@RequestMapping("/agenda")
-public class AgendaController {
-    
+@RequestMapping("/vote")
+public class VoteController {
+
     @Autowired
-    AgendaService service;
+    VoteService service;
 
     @GetMapping
-    public List<AgendaDTO> list() {
+    public List<VoteDTO> list() {
         try {
             return service.list();
         } catch (Exception e) {
@@ -33,13 +34,18 @@ public class AgendaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
+    VoteDTO add(@RequestBody VoteDTO newVoteDTO) {
         try {
-            return service.add(newAgendaDTO); 
+            return service.vote(newVoteDTO);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) {
+        } catch (DesafioException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
         }
     }
+
 }

@@ -22,10 +22,6 @@ public class Associate {
     private Long id;
     
     @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
-    
-    @NotNull
     @Column(name = "cpf", nullable = false)
     private String cpf;
     

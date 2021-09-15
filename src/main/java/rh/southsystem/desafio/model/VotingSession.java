@@ -37,6 +37,7 @@ public class VotingSession {
     @Column(name = "dt_end_session_UTC", nullable = false)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="JsonFormat.DEFAULT_TIMEZONE") // Commented for future reference
     private LocalDateTime endSession = LocalDateTime.now().plusMinutes(1); // Default session lasts for one minute
 
     @NotNull
