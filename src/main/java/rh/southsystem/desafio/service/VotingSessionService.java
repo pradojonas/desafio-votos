@@ -25,24 +25,18 @@ public class VotingSessionService {
     public List<VotingSessionDTO> list() {
         var modelList = sessionRepo.findAll();
         var dtoList   = modelList.stream()
-                                 .map(entity -> VotingSessionMapper.INSTANCE.fromEntity(entity))
+                                 .map(entity -> VotingSessionMapper.INSTANCE.entityToPostDTO(entity))
                                  .collect(Collectors.toList());
         return dtoList;
     }
 
     public VotingSessionDTO add(@RequestBody VotingSessionDTO newVotingSessionDTO) {
         
-        var agendaOpt = agendaRepo.findById(newVotingSessionDTO.getIdAgenda());
-        if (!agendaOpt.isPresent()) {
-            throw new IllegalArgumentException("Invalid agenda for Voting Session.");
-        }
-        
-        var newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
-        newVotingSession.setAgenda(agendaOpt.get());
+        VotingSession newVotingSession = VotingSessionMapper.INSTANCE.dtoToEntity(newVotingSessionDTO, agendaRepo); // Transforming DTO in Entity
         this.validateVotingSession(newVotingSession);
         // TODO: Handle constraints errors
         sessionRepo.save(newVotingSession);
-        return VotingSessionMapper.INSTANCE.fromEntity(newVotingSession);
+        return VotingSessionMapper.INSTANCE.entityToPostDTO(newVotingSession);
     }
     
     private void validateVotingSession(VotingSession newVotingSession) {

@@ -3,24 +3,60 @@ package rh.southsystem.desafio.mappers;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import rh.southsystem.desafio.dto.VotingSessionDTO;
+import rh.southsystem.desafio.model.Agenda;
 import rh.southsystem.desafio.model.VotingSession;
+import rh.southsystem.desafio.repository.AgendaRepository;
 
 @Mapper(imports = { LocalDateTime.class, ChronoUnit.class })
 public interface VotingSessionMapper {
-
     VotingSessionMapper INSTANCE = Mappers.getMapper(VotingSessionMapper.class);
 
-    @Mapping(target = "endSession",
-             expression = "java( LocalDateTime.now().plusMinutes(sDto.getMinutesDuration()) )")
-    VotingSession fromDTO(VotingSessionDTO sDto);
+    @Mapping(source = "minutesDuration", target = "endSession", qualifiedByName = "durationMinutesToDateTime")
+    VotingSession dtoToEntity(VotingSessionDTO sDto, @Context AgendaRepository agendaRepo);
 
-    @Mapping(target = "minutesDuration",
-             expression = "java( ChronoUnit.MINUTES.between(LocalDateTime.now(), s.getEndSession()) )")
-    VotingSessionDTO fromEntity(VotingSession s);
+    @AfterMapping
+    // This method handles Agenda property
+    default void mapAgenda(@MappingTarget VotingSession target,
+                     VotingSessionDTO source,
+                     @Context AgendaRepository service) {
+        // Fullfills the Agenda field
+        if (source.getIdAgenda() == null)
+            return; // TODO: Avaliar se faz tratamento de erro
+
+        target.setAgenda(service.findById(source.getIdAgenda())
+                                .orElseThrow(() -> new IllegalArgumentException("VotingSession requires a valid Agenda (id = "
+                                                                                + source.getIdAgenda()
+                                                                                + ")")));
+    }
+
+    @Mapping(source = "endSession",
+             target = "minutesDuration",
+             qualifiedByName = "dateTimeToRemainingMinutes")
+    @Mapping(source = "agenda", target = "idAgenda", qualifiedByName = "getIdAgenda")
+    VotingSessionDTO entityToPostDTO(VotingSession s);
+
+    @Named("durationMinutesToDateTime")
+    public static LocalDateTime durationMinutesToDateTime(Long minutesDuration) {
+        return LocalDateTime.now().plusMinutes(minutesDuration);
+    }
+
+    @Named("dateTimeToRemainingMinutes")
+    public static Long dateTimeToRemainingMinutes(LocalDateTime endTime) {
+        return ChronoUnit.MINUTES.between(LocalDateTime.now(), endTime);
+    }
+
+    @Named("getIdAgenda")
+    public static Long getIdAgenda(Agenda entity) {
+        return entity.getId();
+    }
 
 }

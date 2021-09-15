@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import rh.southsystem.desafio.dto.VotingSessionDTO;
-import rh.southsystem.desafio.model.VotingSession;
 import rh.southsystem.desafio.service.VotingSessionService;
 
 @RestController
