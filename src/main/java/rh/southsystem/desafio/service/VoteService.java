@@ -36,8 +36,6 @@ public class VoteService {
 
     public VoteDTO vote(VoteDTO newVoteDTO) {
 
-        // TODO: Check CPF using API
-
         Vote newVote = VoteMapper.INSTANCE.fromDTO(newVoteDTO); // Transforming DTO in Entity
         validateVote(newVote);
 
@@ -50,6 +48,9 @@ public class VoteService {
         }
 
         this.validateVote(newVote);
+        
+        //TODO: Add Unique constraint <AssociateId, Session>
+        
         voteRepo.save(newVote);
         return VoteMapper.INSTANCE.fromEntity(newVote);
     }
@@ -62,6 +63,8 @@ public class VoteService {
         // TODO: Check if VotingSession is open
 
         // TODO: Check if CPF has already voted
+
+        // TODO: Check if CPF can vote using API
 
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import rh.southsystem.desafio.dto.VotingSessionDTO;
-import rh.southsystem.desafio.exceptions.DesafioException;
+import rh.southsystem.desafio.exceptions.CustomException;
 import rh.southsystem.desafio.mappers.VotingSessionMapper;
 import rh.southsystem.desafio.model.VotingSession;
 import rh.southsystem.desafio.repository.VotingSessionRepository;
@@ -31,7 +31,7 @@ public class VotingSessionService {
         return dtoList;
     }
 
-    public VotingSessionDTO add(VotingSessionDTO newVotingSessionDTO) throws DesafioException {
+    public VotingSessionDTO add(VotingSessionDTO newVotingSessionDTO) throws CustomException {
 
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaService.getById(newVotingSessionDTO.getIdAgenda()));
@@ -43,7 +43,7 @@ public class VotingSessionService {
             VotingSession currentSession = sessionRepo.findByAgendaId(newVotingSessionDTO.getIdAgenda());
             var           message        = "There's already a voting session for this agenda (sessionId = "
                                            + currentSession.getId() + ").";
-            throw new DesafioException(message, HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException(message, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return VotingSessionMapper.INSTANCE.fromEntity(newVotingSession);
     }

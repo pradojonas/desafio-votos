@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import rh.southsystem.desafio.dto.VotingSessionDTO;
-import rh.southsystem.desafio.exceptions.DesafioException;
+import rh.southsystem.desafio.exceptions.CustomException;
 import rh.southsystem.desafio.service.VotingSessionService;
 
 @RestController
@@ -39,7 +39,7 @@ public class VotingSessionController {
             return service.add(newVotingSessionDTO);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (DesafioException e) {
+        } catch (CustomException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
         catch (Exception e) {

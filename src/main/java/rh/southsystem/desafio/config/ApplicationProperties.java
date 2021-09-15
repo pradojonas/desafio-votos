@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationProperties {
     
     // Class is not supposed to be static; Inject it with AutoWired
+    
+    // TODO: Create multiple profiles for database configuration
 
     @Value("${env:}")
     private String env;
