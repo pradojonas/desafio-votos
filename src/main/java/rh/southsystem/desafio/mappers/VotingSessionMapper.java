@@ -3,18 +3,14 @@ package rh.southsystem.desafio.mappers;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import rh.southsystem.desafio.dto.VotingSessionDTO;
 import rh.southsystem.desafio.model.Agenda;
 import rh.southsystem.desafio.model.VotingSession;
-import rh.southsystem.desafio.repository.AgendaRepository;
 
 @Mapper()
 public interface VotingSessionMapper {
