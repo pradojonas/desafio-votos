@@ -10,6 +10,6 @@ import rh.southsystem.desafio.model.VotingSession;
 public interface VotingSessionRepository extends JpaRepository<VotingSession, Long> {
     
     @Query(value = "SELECT * FROM SESSION WHERE ID_AGENDA = ?1", nativeQuery = true)
-    VotingSession findByEmailAddress(Long idAgenda);
+    VotingSession findByAgendaId(Long idAgenda);
 
 }

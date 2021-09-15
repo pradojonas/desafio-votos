@@ -7,8 +7,10 @@ import rh.southsystem.desafio.enums.DecisionEnum;
 @Getter
 @Setter
 public class VoteDTO {
+    
+    private Long id;
 
-    private Long cpf;
+    private String cpf;
 
     private Long idVotingSession;
 

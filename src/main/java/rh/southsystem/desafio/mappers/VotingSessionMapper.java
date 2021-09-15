@@ -21,28 +21,13 @@ public interface VotingSessionMapper {
     VotingSessionMapper INSTANCE = Mappers.getMapper(VotingSessionMapper.class);
 
     @Mapping(source = "minutesDuration", target = "endSession", qualifiedByName = "durationMinutesToDateTime")
-    VotingSession dtoToEntity(VotingSessionDTO sDto, @Context AgendaRepository agendaRepo);
-
-    @AfterMapping
-    // This method handles Agenda property
-    default void mapAgenda(@MappingTarget VotingSession target,
-                           VotingSessionDTO source,
-                           @Context AgendaRepository service) {
-        // Fullfills the Agenda field
-        if (source.getIdAgenda() == null)
-            return; // TODO: Avaliar se faz tratamento de erro
-
-        target.setAgenda(service.findById(source.getIdAgenda())
-                                .orElseThrow(() -> new IllegalArgumentException("VotingSession requires a valid Agenda (id = "
-                                                                                + source.getIdAgenda()
-                                                                                + ")")));
-    }
+    VotingSession fromDTO(VotingSessionDTO sDto);
 
     @Mapping(source = "endSession",
              target = "minutesDuration",
              qualifiedByName = "dateTimeToRemainingMinutes")
     @Mapping(source = "agenda", target = "idAgenda", qualifiedByName = "getIdAgenda")
-    VotingSessionDTO entityToPostDTO(VotingSession s);
+    VotingSessionDTO fromEntity(VotingSession s);
 
     @Named("durationMinutesToDateTime")
     public static LocalDateTime durationMinutesToDateTime(Long minutesDuration) {

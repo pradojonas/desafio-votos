@@ -28,7 +28,7 @@ public class AgendaService {
         return dtoList;
     }
 
-    public AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
+    public AgendaDTO add(AgendaDTO newAgendaDTO) {
         var newAgenda = AgendaMapper.INSTANCE.fromDTO(newAgendaDTO); // Transforming DTO in Entity
         this.validateAgenda(newAgenda);
         agendaRepo.save(newAgenda);
@@ -38,6 +38,16 @@ public class AgendaService {
     private void validateAgenda(Agenda newAgenda) {
         if (Strings.isNullOrEmpty(newAgenda.getDescription()))
             throw new IllegalArgumentException("Agenda requires a description.");
+    }
+
+    public Agenda getById(Long idAgenda) {
+        if (idAgenda == null)
+            throw new IllegalArgumentException("Null id for VotingSession.");
+
+        var entity = agendaRepo.findById(idAgenda)
+                               .orElseThrow(() -> new IllegalArgumentException("Find Agenda requires a valid value (id = "
+                                                                               + idAgenda + ")"));
+        return entity;
     }
 
 }

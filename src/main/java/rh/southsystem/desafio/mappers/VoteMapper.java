@@ -10,8 +10,7 @@ import rh.southsystem.desafio.model.Vote;
 public interface VoteMapper {
     VoteMapper INSTANCE = Mappers.getMapper(VoteMapper.class);
 
-    VoteDTO fromEntity(Vote a);
-
     Vote fromDTO(VoteDTO aDto);
 
+    VoteDTO fromEntity(Vote a);
 }
