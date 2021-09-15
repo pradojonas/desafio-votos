@@ -16,7 +16,7 @@ import rh.southsystem.desafio.model.Agenda;
 import rh.southsystem.desafio.model.VotingSession;
 import rh.southsystem.desafio.repository.AgendaRepository;
 
-@Mapper(imports = { LocalDateTime.class, ChronoUnit.class })
+@Mapper()
 public interface VotingSessionMapper {
     VotingSessionMapper INSTANCE = Mappers.getMapper(VotingSessionMapper.class);
 
@@ -26,8 +26,8 @@ public interface VotingSessionMapper {
     @AfterMapping
     // This method handles Agenda property
     default void mapAgenda(@MappingTarget VotingSession target,
-                     VotingSessionDTO source,
-                     @Context AgendaRepository service) {
+                           VotingSessionDTO source,
+                           @Context AgendaRepository service) {
         // Fullfills the Agenda field
         if (source.getIdAgenda() == null)
             return; // TODO: Avaliar se faz tratamento de erro
@@ -51,7 +51,8 @@ public interface VotingSessionMapper {
 
     @Named("dateTimeToRemainingMinutes")
     public static Long dateTimeToRemainingMinutes(LocalDateTime endTime) {
-        return ChronoUnit.MINUTES.between(LocalDateTime.now(), endTime);
+        // Minus minutes to round up the remaining time
+        return ChronoUnit.MINUTES.between(LocalDateTime.now().minusMinutes(1), endTime);
     }
 
     @Named("getIdAgenda")

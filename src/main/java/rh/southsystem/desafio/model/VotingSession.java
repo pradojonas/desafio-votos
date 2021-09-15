@@ -8,8 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -23,7 +24,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "Session")
+@Table(name = "Session",
+       uniqueConstraints = { @UniqueConstraint(name = "UniqueAgenda", columnNames = { "id_agenda" }) })
 public class VotingSession {
 
     @Id
@@ -38,7 +40,7 @@ public class VotingSession {
     private LocalDateTime endSession = LocalDateTime.now().plusMinutes(1); // Default session lasts for one minute
 
     @NotNull
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_agenda", nullable = false)
     private Agenda agenda;
 
