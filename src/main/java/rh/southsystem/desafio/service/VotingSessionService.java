@@ -70,7 +70,7 @@ public class VotingSessionService {
 
         var entity = sessionRepo.findById(idVotingSession)
                                 .orElseThrow(() -> new MappedException("Find VotingSession requires a valid value (id = "
-                                                                       + idVotingSession + ")",
+                                                                       + idVotingSession + ").",
                                                                        HttpStatus.BAD_REQUEST));
         return entity;
     }

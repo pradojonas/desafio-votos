@@ -47,7 +47,7 @@ public class AgendaService {
 
         var entity = agendaRepo.findById(idAgenda)
                                .orElseThrow(() -> new MappedException("Find Agenda requires a valid value (id = "
-                                                                      + idAgenda + ")",
+                                                                      + idAgenda + ").",
                                                                       HttpStatus.BAD_REQUEST));
         return entity;
     }

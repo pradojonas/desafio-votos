@@ -25,24 +25,16 @@ public class AgendaController {
 
     @GetMapping
     public List<AgendaDTO> list() {
-        try {
-            return service.list();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
-        }
+        return service.list();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
+    AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) throws MappedException {
         try {
             return service.add(newAgendaDTO);
-        } catch (MappedException e) {
-            // TODO: Use @RestControllerAdvice in all Controllers for Exception Handle (https://www.bezkoder.com/spring-boot-restcontrolleradvice/#RestControllerAdvice_with_ResponseEntity)
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
+            throw e;
         }
     }
 }

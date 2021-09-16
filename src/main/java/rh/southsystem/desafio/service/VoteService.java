@@ -65,7 +65,7 @@ public class VoteService {
         try {
             this.save(newVote);
         } catch (DataIntegrityViolationException e) {
-            String message = String.format("There's already a vote for this associate (cpf = %s) in this session (id = %s)",
+            String message = String.format("There's already a vote for this associate (cpf = %s) in this session (id = %s).",
                                            newVote.getAssociate().getCpf(),
                                            newVote.getVotingSession().getId());
             throw new MappedException(message, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -81,10 +81,10 @@ public class VoteService {
     private void validateVote(Vote newVote) throws MappedException {
         // Entity should be ready to persist
         if (newVote.getVote() == null)
-            throw new MappedException("Null value for vote; please, answer with one of these: ['SIM', 'NAO', '0', '1']",
+            throw new MappedException("Null value for vote; please, answer with one of these: ['SIM', 'NAO', '0', '1'].",
                                       HttpStatus.BAD_REQUEST);
         if (newVote.getVotingSession().getEndSession().isBefore(Instant.now()))
-            throw new MappedException(String.format("Voting Session is already closed (id = %s)",
+            throw new MappedException(String.format("Voting Session is already closed (id = %s).",
                                                     newVote.getVotingSession().getId()), HttpStatus.GONE);
 
         this.validateCpfUsingAPI(newVote.getAssociate().getCpf());
@@ -104,7 +104,7 @@ public class VoteService {
             CpfApiDTO result    = webClient.get()
                                            .retrieve()
                                            .onStatus(obtainedCode -> obtainedCode.equals(HttpStatus.NOT_FOUND),
-                                                     request -> Mono.error(new MappedException(String.format("The CPF '%s' is invalid",
+                                                     request -> Mono.error(new MappedException(String.format("The CPF '%s' is invalid.",
                                                                                                              cpf),
                                                                                                HttpStatus.BAD_REQUEST)))
                                            .bodyToMono(CpfApiDTO.class)

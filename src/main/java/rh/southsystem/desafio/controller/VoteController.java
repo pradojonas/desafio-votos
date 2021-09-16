@@ -25,24 +25,13 @@ public class VoteController {
 
     @GetMapping
     public List<VoteDTO> list() {
-        try {
-            return service.list();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
-        }
+        return service.list();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    VoteDTO vote(@RequestBody VoteDTO newVoteDTO) {
-        try {
-            return service.vote(newVoteDTO);
-        } catch (MappedException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
-        }
+    VoteDTO vote(@RequestBody VoteDTO newVoteDTO) throws MappedException {
+        return service.vote(newVoteDTO);
     }
 
 }

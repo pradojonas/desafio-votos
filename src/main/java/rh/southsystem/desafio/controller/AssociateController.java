@@ -21,10 +21,6 @@ public class AssociateController {
 
     @GetMapping
     public List<AssociateDTO> list() {
-        try {
-            return service.list();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
-        }
+        return service.list();
     }
 }
