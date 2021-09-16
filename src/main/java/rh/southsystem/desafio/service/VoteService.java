@@ -65,7 +65,7 @@ public class VoteService {
             this.save(newVote);
         } catch (DataIntegrityViolationException e) {
             String message = String.format("There's already a vote for this associate (cpf = %s) in this session (id = %s)",
-                                           newVote.getAssociate().getId(),
+                                           newVote.getAssociate().getCpf(),
                                            newVote.getVotingSession().getId());
             throw new CustomException(message, HttpStatus.UNPROCESSABLE_ENTITY);
         }

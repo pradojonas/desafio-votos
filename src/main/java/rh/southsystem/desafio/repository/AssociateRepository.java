@@ -11,6 +11,5 @@ import rh.southsystem.desafio.model.Associate;
 public interface AssociateRepository extends JpaRepository<Associate, Long> {
 
     Optional<Associate> findBycpf(String string);
-    //TODO: Escrever query
 
 }
