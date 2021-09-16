@@ -9,7 +9,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import rh.southsystem.desafio.dto.VotingSessionDTO;
+import rh.southsystem.desafio.config.ApplicationProperties;
+import rh.southsystem.desafio.dto.VotingSessionPostDTO;
 import rh.southsystem.desafio.exceptions.CustomException;
 import rh.southsystem.desafio.mappers.VotingSessionMapper;
 import rh.southsystem.desafio.model.VotingSession;
@@ -22,8 +23,10 @@ public class VotingSessionService {
     private VotingSessionRepository sessionRepo;
     @Autowired
     private AgendaService           agendaService;
+    @Autowired
+    private ApplicationProperties   appProps;
 
-    public List<VotingSessionDTO> list() {
+    public List<VotingSessionPostDTO> list() {
         var modelList = sessionRepo.findAll();
         var dtoList   = modelList.stream()
                                  .map(entity -> VotingSessionMapper.INSTANCE.fromEntity(entity))
@@ -31,7 +34,7 @@ public class VotingSessionService {
         return dtoList;
     }
 
-    public VotingSessionDTO add(VotingSessionDTO newVotingSessionDTO) throws CustomException {
+    public VotingSessionPostDTO add(VotingSessionPostDTO newVotingSessionDTO) throws CustomException {
 
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaService.getById(newVotingSessionDTO.getIdAgenda()));
@@ -49,8 +52,9 @@ public class VotingSessionService {
     }
 
     private void validateVotingSession(VotingSession newVotingSession) {
-        if (newVotingSession.getEndSession() == null
-            || newVotingSession.getEndSession().isBefore(Instant.now()))
+        if (newVotingSession.getEndSession() == null)
+            newVotingSession.setEndSession(Instant.now().plusSeconds(appProps.getSessionDurationSeconds())); // Setting default duration
+        if (newVotingSession.getEndSession().isBefore(Instant.now()))
             throw new IllegalArgumentException("VotingSession requires a valid endSession.");
     }
 

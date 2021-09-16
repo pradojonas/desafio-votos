@@ -8,7 +8,6 @@ import rh.southsystem.desafio.model.Associate;
 
 @Mapper
 public interface AssociateMapper {
-
     AssociateMapper INSTANCE = Mappers.getMapper(AssociateMapper.class);
 
     AssociateDTO fromEntity(Associate a);

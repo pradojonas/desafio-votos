@@ -7,43 +7,40 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import rh.southsystem.desafio.config.ApplicationProperties;
-import rh.southsystem.desafio.dto.VotingSessionDTO;
+import rh.southsystem.desafio.dto.VotingSessionPostDTO;
 import rh.southsystem.desafio.model.Agenda;
 import rh.southsystem.desafio.model.VotingSession;
 
-@Mapper()
+@Mapper(componentModel = "spring")
 public interface VotingSessionMapper {
-    VotingSessionMapper INSTANCE = Mappers.getMapper(VotingSessionMapper.class);
+    VotingSessionMapper INSTANCE       = Mappers.getMapper(VotingSessionMapper.class);
+    static final long   ROUND_DURATION = 60;
 
-    @Mapping(source = "minutesDuration", target = "endSession", qualifiedByName = "durationMinutesToDateTime")
-    VotingSession fromDTO(VotingSessionDTO sDto);
+    @Mapping(target = "agenda", ignore = true) // Handled in Service Class
+    @Mapping(source = "minutesDuration", target = "endSession", qualifiedByName = "setEndSession")
+    VotingSession fromDTO(VotingSessionPostDTO sDto);
 
-    @Mapping(source = "endSession",
-             target = "minutesDuration",
-             qualifiedByName = "dateTimeToRemainingMinutes")
-    @Mapping(source = "agenda", target = "idAgenda", qualifiedByName = "getIdAgenda")
-    VotingSessionDTO fromEntity(VotingSession s);
-
-    @Named("durationMinutesToDateTime")
-    public static Instant durationMinutesToDateTime(Long minutesDuration) {
-        // TODO: Check if minutesDuration is negative
-        return Instant.now().plusSeconds(properties.getSessionDuration());
-
-        // TODO: Add default.session.duration in application.properties
+    @Named("setEndSession")
+    public static Instant setEndSession(Long minutesDuration) {
+        // Null case treated in VotingSessionService.validateVotingSession()
+        var endSession = minutesDuration == null ? null : Instant.now().plusSeconds(minutesDuration * 60);
+        return endSession;
     }
 
-    @Named("dateTimeToRemainingMinutes")
-    public static Long dateTimeToRemainingMinutes(Instant endTime) {
-        // Minus 1 minute to round up the remaining time
-        return ChronoUnit.MINUTES.between(Instant.now().minusSeconds(60), endTime);
+    @Mapping(source = "endSession", target = "minutesDuration", qualifiedByName = "instantToRemainingMinutes")
+    @Mapping(source = "agenda", target = "idAgenda", qualifiedByName = "getIdAgenda")
+    VotingSessionPostDTO fromEntity(VotingSession s);
+
+    @Named("instantToRemainingMinutes")
+    public static Long instantToRemainingMinutes(Instant sourceEndTime) {
+        // Rounding up the remaining time
+        return ChronoUnit.MINUTES.between(Instant.now(), sourceEndTime.plusSeconds(ROUND_DURATION));
     }
 
     @Named("getIdAgenda")
-    public static Long getIdAgenda(Agenda entity) {
-        return entity.getId();
+    public static Long getIdAgenda(Agenda sourceEntity) {
+        return sourceEntity.getId();
     }
 
 }

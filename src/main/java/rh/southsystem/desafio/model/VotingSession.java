@@ -38,8 +38,7 @@ public class VotingSession {
     @Column(name = "dt_end_session_UTC", nullable = false)
     @JsonDeserialize(using = InstantDeserializer.class)
     @JsonSerialize(using = InstantSerializer.class)
-    // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="JsonFormat.DEFAULT_TIMEZONE") // Commented for future reference
-    private Instant endSession = Instant.now().plusSeconds(60); // Default session lasts for one minute
+    private Instant endSession;
 
     // TODO: Add default.session.duration in application.properties
 

@@ -5,10 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class VotingSessionDTO {
+public class VotingSessionPostDTO {
 
     private Long id;
-    
+
     private Long idAgenda;
-    private Long minutesDuration = 1L;
+    private Long minutesDuration;
 }

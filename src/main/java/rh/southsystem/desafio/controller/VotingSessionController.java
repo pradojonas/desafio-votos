@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import rh.southsystem.desafio.dto.VotingSessionDTO;
+import rh.southsystem.desafio.dto.VotingSessionPostDTO;
 import rh.southsystem.desafio.exceptions.CustomException;
 import rh.southsystem.desafio.service.VotingSessionService;
 
@@ -24,7 +24,7 @@ public class VotingSessionController {
     VotingSessionService service;
 
     @GetMapping
-    public List<VotingSessionDTO> list() {
+    public List<VotingSessionPostDTO> list() {
         try {
             return service.list();
         } catch (Exception e) {
@@ -34,7 +34,7 @@ public class VotingSessionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    VotingSessionDTO add(@RequestBody VotingSessionDTO newVotingSessionDTO) {
+    VotingSessionPostDTO add(@RequestBody VotingSessionPostDTO newVotingSessionDTO) {
         try {
             return service.add(newVotingSessionDTO);
         } catch (IllegalArgumentException e) {

@@ -3,9 +3,7 @@ package rh.southsystem.desafio.config;
 import java.security.InvalidParameterException;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @Configuration
 public class ApplicationProperties {
@@ -20,7 +18,7 @@ public class ApplicationProperties {
     private String env;
 
     @Value("${session.duration.seconds}")
-    private Long sessionDuration; // Value in seconds
+    private Long sessionDurationSeconds; // Value in seconds
 
     public String getEnv() {
         if (env.isBlank())
@@ -28,15 +26,15 @@ public class ApplicationProperties {
         return env;
     }
 
-    public Long getSessionDuration() {
-        return sessionDuration;
+    public Long getSessionDurationSeconds() {
+        return sessionDurationSeconds;
     }
 
     public void setEnv(String env) {
         this.env = env;
     }
 
-    public void setSessionDuration(Long sessionDuration) {
-        this.sessionDuration = sessionDuration;
+    public void setSessionDurationSeconds(Long sessionDuration) {
+        this.sessionDurationSeconds = sessionDuration;
     }
 }

@@ -8,7 +8,6 @@ import rh.southsystem.desafio.model.Agenda;
 
 @Mapper
 public interface AgendaMapper {
-
     AgendaMapper INSTANCE = Mappers.getMapper(AgendaMapper.class);
 
     AgendaDTO fromEntity(Agenda a);
