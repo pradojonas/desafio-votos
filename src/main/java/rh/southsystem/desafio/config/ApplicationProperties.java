@@ -4,8 +4,10 @@ import java.security.InvalidParameterException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
+@PropertySource(value = "classpath:/app.${spring.profiles.active}.properties", ignoreResourceNotFound = false)
 public class ApplicationProperties {
 
     // Class is not supposed to be static; Inject it with AutoWired
@@ -22,13 +24,11 @@ public class ApplicationProperties {
 
     @Value("${api.valid.vote.url}")
     private String cpfApiUrl; // Replace {cpf} for parameter
-    
+
     @Value("${api.valid.vote.timeout.seconds}")
     private Long cpfApiTimeout;
 
     public String getEnv() {
-        if (env.isBlank())
-            throw new InvalidParameterException("Error: 'profile.env' variable is not defined in application.properties");
         return env;
     }
 
@@ -37,8 +37,6 @@ public class ApplicationProperties {
     }
 
     public String getCpfApiUrl() {
-        if (cpfApiUrl.isBlank())
-            throw new InvalidParameterException("Error: 'cpfApiUrl' variable is not defined in application.properties");
         return cpfApiUrl;
     }
 
