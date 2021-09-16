@@ -20,18 +20,31 @@ public class ApplicationProperties {
     @Value("${session.duration.seconds}")
     private Long sessionDurationSeconds; // Value in seconds
 
+    @Value("${api.valid.vote.url}")
+    private String cpfApiUrl; // Replace {cpf} for parameter
+
     public String getEnv() {
         if (env.isBlank())
-            throw new InvalidParameterException("Error: 'env' variable is not defined in application.properties");
+            throw new InvalidParameterException("Error: 'profile.env' variable is not defined in application.properties");
         return env;
-    }
-
-    public Long getSessionDurationSeconds() {
-        return sessionDurationSeconds;
     }
 
     public void setEnv(String env) {
         this.env = env;
+    }
+
+    public String getCpfApiUrl() {
+        if (cpfApiUrl.isBlank())
+            throw new InvalidParameterException("Error: 'cpfApiUrl' variable is not defined in application.properties");
+        return cpfApiUrl;
+    }
+
+    public void setCpfApiUrl(String cpfApiUrl) {
+        this.cpfApiUrl = cpfApiUrl;
+    }
+
+    public Long getSessionDurationSeconds() {
+        return sessionDurationSeconds;
     }
 
     public void setSessionDurationSeconds(Long sessionDuration) {

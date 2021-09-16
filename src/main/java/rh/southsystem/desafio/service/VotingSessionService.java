@@ -34,14 +34,12 @@ public class VotingSessionService {
         return dtoList;
     }
 
-    public VotingSessionPostDTO add(VotingSessionPostDTO newVotingSessionDTO) throws CustomException {
+    public VotingSessionPostDTO create(VotingSessionPostDTO newVotingSessionDTO) throws CustomException {
 
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaService.getById(newVotingSessionDTO.getIdAgenda()));
-        this.validateVotingSession(newVotingSession);
-        // TODO: Handle constraints errors
         try {
-            sessionRepo.save(newVotingSession);
+            this.save(newVotingSession);
         } catch (DataIntegrityViolationException e) {
             VotingSession currentSession = sessionRepo.findByAgendaId(newVotingSessionDTO.getIdAgenda());
             var           message        = "There's already a voting session for this agenda (sessionId = "
@@ -51,9 +49,16 @@ public class VotingSessionService {
         return VotingSessionMapper.INSTANCE.fromEntity(newVotingSession);
     }
 
+    private void save(VotingSession newVotingSession) {
+        this.validateVotingSession(newVotingSession);
+        // TODO: Handle constraints errors
+        sessionRepo.save(newVotingSession);
+    }
+
     private void validateVotingSession(VotingSession newVotingSession) {
         if (newVotingSession.getEndSession() == null)
-            newVotingSession.setEndSession(Instant.now().plusSeconds(appProps.getSessionDurationSeconds())); // Setting default duration
+            // Setting default duration if necessary
+            newVotingSession.setEndSession(Instant.now().plusSeconds(appProps.getSessionDurationSeconds()));
         if (newVotingSession.getEndSession().isBefore(Instant.now()))
             throw new IllegalArgumentException("VotingSession requires a valid endSession.");
     }

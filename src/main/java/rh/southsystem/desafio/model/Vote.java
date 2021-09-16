@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.sun.istack.NotNull;
 
@@ -23,7 +24,9 @@ import rh.southsystem.desafio.enums.DecisionEnum;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "Vote")
+@Table(name = "Vote",
+       uniqueConstraints = { @UniqueConstraint(name = "UniqueVote",
+                                               columnNames = { "id_session", "id_associate" }) })
 public class Vote {
 
     @Id

@@ -40,8 +40,6 @@ public class VotingSession {
     @JsonSerialize(using = InstantSerializer.class)
     private Instant endSession;
 
-    // TODO: Add default.session.duration in application.properties
-
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_agenda", nullable = false)

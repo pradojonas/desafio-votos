@@ -37,7 +37,7 @@ public class AgendaController {
         try {
             return service.add(newAgendaDTO);
         } catch (IllegalArgumentException e) {
-            // TODO: Use @RestControllerAdvice in all Controllers (https://www.bezkoder.com/spring-boot-restcontrolleradvice/#RestControllerAdvice_with_ResponseEntity)
+            // TODO: Use @RestControllerAdvice in all Controllers for Exception Handle (https://www.bezkoder.com/spring-boot-restcontrolleradvice/#RestControllerAdvice_with_ResponseEntity)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,6 +16,8 @@ public interface VoteMapper {
     VoteMapper INSTANCE = Mappers.getMapper(VoteMapper.class);
 
     @Mapping(source = "vote", target = "dateVote", qualifiedByName = "now")
+    @Mapping(target = "associate", ignore = true) // Handled in Service Class
+    @Mapping(target = "votingSession", ignore = true) // Handled in Service Class
     Vote fromDTO(VoteDTO aDto);
 
     @Mapping(source = "associate.cpf", target = "cpf")

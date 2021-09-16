@@ -36,7 +36,7 @@ public class VotingSessionController {
     @ResponseStatus(HttpStatus.CREATED)
     VotingSessionPostDTO add(@RequestBody VotingSessionPostDTO newVotingSessionDTO) {
         try {
-            return service.add(newVotingSessionDTO);
+            return service.create(newVotingSessionDTO);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (CustomException e) {
