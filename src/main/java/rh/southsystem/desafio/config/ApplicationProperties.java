@@ -8,11 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "classpath:/app.${spring.profiles.active}.properties", ignoreResourceNotFound = false)
 public class ApplicationProperties {
 
-    // Class is not supposed to be static; Inject it with AutoWired
-
-    // TODO: Database configuration based on profile 
-
-    // TODO: Configure Swagger?
+    // TODO: Configure Swagger
 
     @Value("${profile.env}")
     private String env;
