@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 
 import reactor.core.Exceptions;
 import reactor.core.publisher.Mono;
@@ -111,12 +111,12 @@ public class VoteService {
             if (result.getStatus() != CanVoteEnum.ABLE_TO_VOTE)
                 throw new CustomException(String.format("This associate (CPF = %s) is unable to vote.", cpf),
                                           HttpStatus.FORBIDDEN);
-        } catch (WebClientResponseException e) {
-            throw new CustomException("The CPF API is unavailable.", HttpStatus.SERVICE_UNAVAILABLE);
         } catch (RuntimeException e) {
-            // Throw by 'block()'
-            var exc = Exceptions.unwrap(e);
-            throw exc;
+            // Thrown by 'block()'
+            var cause = Exceptions.unwrap(e);
+            if (cause instanceof WebClientRequestException)
+                throw new CustomException("The CPF API is unavailable.", HttpStatus.SERVICE_UNAVAILABLE);
+            throw e;
         }
     }
 }
