@@ -43,7 +43,7 @@ public class AgendaService {
 
     public Agenda getById(Long idAgenda) throws MappedException {
         if (idAgenda == null)
-            throw new MappedException("Null id for VotingSession.", HttpStatus.BAD_REQUEST);
+            throw new MappedException("Null value for idVotingSession.", HttpStatus.BAD_REQUEST);
 
         var entity = agendaRepo.findById(idAgenda)
                                .orElseThrow(() -> new MappedException("Find Agenda requires a valid value (id = "

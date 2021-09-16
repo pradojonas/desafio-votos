@@ -37,7 +37,7 @@ public class AssociateService {
 
     public Associate getByCPF(String CPF) throws MappedException {
         if (CPF == null)
-            throw new MappedException("Null CPF for Associate.", HttpStatus.BAD_REQUEST);
+            throw new MappedException("Null value for CPF.", HttpStatus.BAD_REQUEST);
         return associateRepo.findBycpf(CPF)
                             .orElseThrow(() -> new EntityNotFoundException("CPF " + CPF + " não encontrado"));
     }

@@ -79,17 +79,15 @@ public class VoteService {
     }
 
     private void validateVote(Vote newVote) throws MappedException {
-        // Entity is ready to persist
+        // Entity should be ready to persist
         if (newVote.getVote() == null)
-            throw new MappedException("Property 'vote' can't be null; please, answer with one of: ['SIM', 'NAO', '0', '1']",
+            throw new MappedException("Null value for vote; please, answer with one of these: ['SIM', 'NAO', '0', '1']",
                                       HttpStatus.BAD_REQUEST);
         if (newVote.getVotingSession().getEndSession().isBefore(Instant.now()))
             throw new MappedException(String.format("Voting Session is already closed (id = %s)",
                                                     newVote.getVotingSession().getId()), HttpStatus.GONE);
 
         this.validateCpfUsingAPI(newVote.getAssociate().getCpf());
-
-        // TODO: Check if CPF has already voted
 
     }
 
@@ -113,6 +111,7 @@ public class VoteService {
                                            .timeout(Duration.ofSeconds(appProps.getCpfApiTimeout()))
                                            .block();
             System.out.println(cpf + ": " + result.getStatus());
+            // TODO: Replace prints with logger
             if (result.getStatus() != CanVoteEnum.ABLE_TO_VOTE)
                 throw new MappedException(String.format("This associate (CPF = %s) is unable to vote.", cpf),
                                           HttpStatus.FORBIDDEN);
@@ -121,7 +120,8 @@ public class VoteService {
             var cause = Exceptions.unwrap(e);
             if (cause instanceof WebClientRequestException
                 || cause instanceof TimeoutException)
-                throw new MappedException("The CPF API is unavailable.", HttpStatus.SERVICE_UNAVAILABLE);
+                throw new MappedException(String.format("The CPF API (%s) is unavailable.",
+                                                        urlWithParameters), HttpStatus.SERVICE_UNAVAILABLE);
             throw e;
         }
     }

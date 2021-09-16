@@ -60,7 +60,8 @@ public class VotingSessionService {
             // Setting default duration if necessary
             newVotingSession.setEndSession(Instant.now().plusSeconds(appProps.getSessionDurationSeconds()));
         if (newVotingSession.getEndSession().isBefore(Instant.now()))
-            throw new MappedException("VotingSession requires a valid endSession.", HttpStatus.BAD_REQUEST);
+            throw new MappedException("VotingSession requires minutesDuration greater or equal 1.",
+                                      HttpStatus.BAD_REQUEST);
     }
 
     public VotingSession getByID(Long idVotingSession) throws MappedException {
