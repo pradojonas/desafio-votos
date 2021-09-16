@@ -40,11 +40,19 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
+		<!-- H2 - Dev Database -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Postgres - Prod Database -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -84,7 +92,7 @@
 				<directory>resources</directory>
 				<targetPath>${project.build.outputDirectory}</targetPath>
 				<includes>
-					<include>application.properties</include>
+					<include>*.properties</include>
 				</includes>
 			</resource>
 		</resources>

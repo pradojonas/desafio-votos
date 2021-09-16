@@ -33,4 +33,8 @@ public class VoteController {
         return service.vote(newVoteDTO);
     }
 
+    // TODO: Contabilizar votos de uma sessão
+    
+    // TODO: Utilizar mensageria para reportar o resultado de uma sessão encerrada
+
 }

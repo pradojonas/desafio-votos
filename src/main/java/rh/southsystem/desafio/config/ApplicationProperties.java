@@ -1,7 +1,5 @@
 package rh.southsystem.desafio.config;
 
-import java.security.InvalidParameterException;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -12,7 +10,7 @@ public class ApplicationProperties {
 
     // Class is not supposed to be static; Inject it with AutoWired
 
-    // TODO: Create multiple profiles for database configuration
+    // TODO: Database configuration based on profile 
 
     // TODO: Configure Swagger?
 
