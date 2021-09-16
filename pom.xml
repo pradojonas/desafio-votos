@@ -15,7 +15,7 @@
 	<name>desafio-votos</name>
 	<description>Projeto desenvolvido para Processo Seletivo da SouthSystem</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>16</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>
 	<dependencies>
@@ -112,10 +112,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
 				<configuration>
-					<source>11</source> <!-- depending on your project -->
-					<target>11</target> <!-- depending on your project -->
+					<source>16</source> <!-- depending on your project -->
+					<target>16</target> <!-- depending on your project -->
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.mapstruct</groupId>
