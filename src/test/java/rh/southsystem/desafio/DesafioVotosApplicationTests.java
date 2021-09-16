@@ -8,6 +8,9 @@ class DesafioVotosApplicationTests {
 
 	@Test
 	void contextLoads() {
+	    
+	 // TODO: Add Tests for controller classes
+	    
 	}
 
 }

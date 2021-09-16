@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
 
+import rh.southsystem.desafio.config.ApplicationProperties;
 import rh.southsystem.desafio.dto.AgendaDTO;
 import rh.southsystem.desafio.mappers.AgendaMapper;
 import rh.southsystem.desafio.model.Agenda;

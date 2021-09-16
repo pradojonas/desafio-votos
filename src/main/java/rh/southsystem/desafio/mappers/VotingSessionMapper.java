@@ -7,7 +7,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import rh.southsystem.desafio.config.ApplicationProperties;
 import rh.southsystem.desafio.dto.VotingSessionDTO;
 import rh.southsystem.desafio.model.Agenda;
 import rh.southsystem.desafio.model.VotingSession;
@@ -28,12 +30,14 @@ public interface VotingSessionMapper {
     @Named("durationMinutesToDateTime")
     public static Instant durationMinutesToDateTime(Long minutesDuration) {
         // TODO: Check if minutesDuration is negative
-        return Instant.now().plusSeconds(60 * minutesDuration);
+        return Instant.now().plusSeconds(properties.getSessionDuration());
+
+        // TODO: Add default.session.duration in application.properties
     }
 
     @Named("dateTimeToRemainingMinutes")
     public static Long dateTimeToRemainingMinutes(Instant endTime) {
-        // Minus minutes to round up the remaining time
+        // Minus 1 minute to round up the remaining time
         return ChronoUnit.MINUTES.between(Instant.now().minusSeconds(60), endTime);
     }
 

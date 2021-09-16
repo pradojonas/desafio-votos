@@ -65,6 +65,8 @@ public class VoteService {
         // TODO: Check if CPF has already voted
 
         // TODO: Check if CPF can vote using API
+        
+        // TODO: Add URL for external API in Application.properties 
 
     }
 }
