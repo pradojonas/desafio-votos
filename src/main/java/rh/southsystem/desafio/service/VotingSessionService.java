@@ -51,7 +51,6 @@ public class VotingSessionService {
 
     private void save(VotingSession newVotingSession) throws MappedException {
         this.validateVotingSession(newVotingSession);
-        // TODO: Handle constraints errors
         sessionRepo.save(newVotingSession);
     }
 

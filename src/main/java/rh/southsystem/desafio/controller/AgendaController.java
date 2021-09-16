@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import rh.southsystem.desafio.dto.AgendaDTO;
 import rh.southsystem.desafio.exceptions.MappedException;
@@ -31,10 +30,6 @@ public class AgendaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) throws MappedException {
-        try {
-            return service.add(newAgendaDTO);
-        } catch (Exception e) {
-            throw e;
-        }
+        return service.add(newAgendaDTO);
     }
 }
