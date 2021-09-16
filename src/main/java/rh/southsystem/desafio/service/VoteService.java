@@ -1,6 +1,8 @@
 package rh.southsystem.desafio.service;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
@@ -80,16 +82,15 @@ public class VoteService {
         if (newVote.getVote() == null)
             throw new IllegalArgumentException("Property 'vote' can't be null; please, answer with one of: ['SIM', 'NAO', '0', '1']");
 
-        this.validateCpfUsingAPI(newVote.getAssociate().getCpf());
-
         // TODO: Check if VotingSession is open
+
+        this.validateCpfUsingAPI(newVote.getAssociate().getCpf());
 
         // TODO: Check if CPF has already voted
 
-        // TODO: Check if CPF can vote using API
-
     }
 
+    // Check if CPF can vote using API
     private void validateCpfUsingAPI(String cpf) throws Throwable {
         String urlWithParameters = appProps.getCpfApiUrl().replace("{cpf}", cpf);
 
@@ -106,6 +107,7 @@ public class VoteService {
                                                                                                              cpf),
                                                                                                HttpStatus.BAD_REQUEST)))
                                            .bodyToMono(CpfApiDTO.class)
+                                           .timeout(Duration.ofSeconds(appProps.getCpfApiTimeout()))
                                            .block();
             System.out.println(cpf + ": " + result.getStatus());
             if (result.getStatus() != CanVoteEnum.ABLE_TO_VOTE)
@@ -114,7 +116,8 @@ public class VoteService {
         } catch (RuntimeException e) {
             // Thrown by 'block()'
             var cause = Exceptions.unwrap(e);
-            if (cause instanceof WebClientRequestException)
+            if (cause instanceof WebClientRequestException
+                || cause instanceof TimeoutException)
                 throw new CustomException("The CPF API is unavailable.", HttpStatus.SERVICE_UNAVAILABLE);
             throw e;
         }

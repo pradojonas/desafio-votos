@@ -22,6 +22,9 @@ public class ApplicationProperties {
 
     @Value("${api.valid.vote.url}")
     private String cpfApiUrl; // Replace {cpf} for parameter
+    
+    @Value("${api.valid.vote.timeout.seconds}")
+    private Long cpfApiTimeout;
 
     public String getEnv() {
         if (env.isBlank())
@@ -49,5 +52,9 @@ public class ApplicationProperties {
 
     public void setSessionDurationSeconds(Long sessionDuration) {
         this.sessionDurationSeconds = sessionDuration;
+    }
+
+    public Long getCpfApiTimeout() {
+        return cpfApiTimeout;
     }
 }
