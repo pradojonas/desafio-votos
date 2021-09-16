@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import rh.southsystem.desafio.config.ApplicationProperties;
 import rh.southsystem.desafio.dto.VotingSessionPostDTO;
-import rh.southsystem.desafio.exceptions.CustomException;
+import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.mappers.VotingSessionMapper;
 import rh.southsystem.desafio.model.VotingSession;
 import rh.southsystem.desafio.repository.VotingSessionRepository;
@@ -34,7 +34,7 @@ public class VotingSessionService {
         return dtoList;
     }
 
-    public VotingSessionPostDTO create(VotingSessionPostDTO newVotingSessionDTO) throws CustomException {
+    public VotingSessionPostDTO create(VotingSessionPostDTO newVotingSessionDTO) throws MappedException {
 
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaService.getById(newVotingSessionDTO.getIdAgenda()));
@@ -44,33 +44,33 @@ public class VotingSessionService {
             VotingSession currentSession = sessionRepo.findByAgendaId(newVotingSessionDTO.getIdAgenda());
             var           message        = "There's already a voting session for this agenda (sessionId = "
                                            + currentSession.getId() + ").";
-            throw new CustomException(message, HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new MappedException(message, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return VotingSessionMapper.INSTANCE.fromEntity(newVotingSession);
     }
 
-    private void save(VotingSession newVotingSession) {
+    private void save(VotingSession newVotingSession) throws MappedException {
         this.validateVotingSession(newVotingSession);
         // TODO: Handle constraints errors
         sessionRepo.save(newVotingSession);
     }
 
-    private void validateVotingSession(VotingSession newVotingSession) {
+    private void validateVotingSession(VotingSession newVotingSession) throws MappedException {
         if (newVotingSession.getEndSession() == null)
             // Setting default duration if necessary
             newVotingSession.setEndSession(Instant.now().plusSeconds(appProps.getSessionDurationSeconds()));
         if (newVotingSession.getEndSession().isBefore(Instant.now()))
-            throw new IllegalArgumentException("VotingSession requires a valid endSession.");
+            throw new MappedException("VotingSession requires a valid endSession.", HttpStatus.BAD_REQUEST);
     }
 
-    public VotingSession getByID(Long idVotingSession) {
+    public VotingSession getByID(Long idVotingSession) throws MappedException {
         if (idVotingSession == null)
-            throw new IllegalArgumentException("Null id for VotingSession.");
+            throw new MappedException("Null id for VotingSession.", HttpStatus.BAD_REQUEST);
 
         var entity = sessionRepo.findById(idVotingSession)
-                                .orElseThrow(() -> new IllegalArgumentException("Find VotingSession requires a valid value (id = "
-                                                                                + idVotingSession + ")"));
+                                .orElseThrow(() -> new MappedException("Find VotingSession requires a valid value (id = "
+                                                                       + idVotingSession + ")",
+                                                                       HttpStatus.BAD_REQUEST));
         return entity;
     }
-
 }

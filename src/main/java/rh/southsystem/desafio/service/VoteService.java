@@ -1,6 +1,7 @@
 package rh.southsystem.desafio.service;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ import rh.southsystem.desafio.config.ApplicationProperties;
 import rh.southsystem.desafio.dto.CpfApiDTO;
 import rh.southsystem.desafio.dto.VoteDTO;
 import rh.southsystem.desafio.enums.CanVoteEnum;
-import rh.southsystem.desafio.exceptions.CustomException;
+import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.mappers.VoteMapper;
 import rh.southsystem.desafio.model.Associate;
 import rh.southsystem.desafio.model.Vote;
@@ -51,7 +52,7 @@ public class VoteService {
         return dtoList;
     }
 
-    public VoteDTO vote(VoteDTO newVoteDTO) throws Throwable {
+    public VoteDTO vote(VoteDTO newVoteDTO) throws MappedException {
 
         Vote newVote = VoteMapper.INSTANCE.fromDTO(newVoteDTO); // Transforming DTO in Entity
         newVote.setVotingSession(sessionService.getByID(newVoteDTO.getIdVotingSession()));
@@ -67,22 +68,24 @@ public class VoteService {
             String message = String.format("There's already a vote for this associate (cpf = %s) in this session (id = %s)",
                                            newVote.getAssociate().getCpf(),
                                            newVote.getVotingSession().getId());
-            throw new CustomException(message, HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new MappedException(message, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return VoteMapper.INSTANCE.fromEntity(newVote);
     }
 
-    private void save(Vote newVote) throws Throwable {
+    private void save(Vote newVote) throws MappedException {
         this.validateVote(newVote);
         voteRepo.save(newVote);
     }
 
-    private void validateVote(Vote newVote) throws Throwable {
+    private void validateVote(Vote newVote) throws MappedException {
         // Entity is ready to persist
         if (newVote.getVote() == null)
-            throw new IllegalArgumentException("Property 'vote' can't be null; please, answer with one of: ['SIM', 'NAO', '0', '1']");
-
-        // TODO: Check if VotingSession is open
+            throw new MappedException("Property 'vote' can't be null; please, answer with one of: ['SIM', 'NAO', '0', '1']",
+                                      HttpStatus.BAD_REQUEST);
+        if (newVote.getVotingSession().getEndSession().isBefore(Instant.now()))
+            throw new MappedException(String.format("Voting Session is already closed (id = %s)",
+                                                    newVote.getVotingSession().getId()), HttpStatus.GONE);
 
         this.validateCpfUsingAPI(newVote.getAssociate().getCpf());
 
@@ -91,7 +94,7 @@ public class VoteService {
     }
 
     // Check if CPF can vote using API
-    private void validateCpfUsingAPI(String cpf) throws Throwable {
+    private void validateCpfUsingAPI(String cpf) throws MappedException {
         String urlWithParameters = appProps.getCpfApiUrl().replace("{cpf}", cpf);
 
         try {
@@ -103,7 +106,7 @@ public class VoteService {
             CpfApiDTO result    = webClient.get()
                                            .retrieve()
                                            .onStatus(obtainedCode -> obtainedCode.equals(HttpStatus.NOT_FOUND),
-                                                     request -> Mono.error(new CustomException(String.format("The CPF '%s' is invalid",
+                                                     request -> Mono.error(new MappedException(String.format("The CPF '%s' is invalid",
                                                                                                              cpf),
                                                                                                HttpStatus.BAD_REQUEST)))
                                            .bodyToMono(CpfApiDTO.class)
@@ -111,14 +114,14 @@ public class VoteService {
                                            .block();
             System.out.println(cpf + ": " + result.getStatus());
             if (result.getStatus() != CanVoteEnum.ABLE_TO_VOTE)
-                throw new CustomException(String.format("This associate (CPF = %s) is unable to vote.", cpf),
+                throw new MappedException(String.format("This associate (CPF = %s) is unable to vote.", cpf),
                                           HttpStatus.FORBIDDEN);
         } catch (RuntimeException e) {
             // Thrown by 'block()'
             var cause = Exceptions.unwrap(e);
             if (cause instanceof WebClientRequestException
                 || cause instanceof TimeoutException)
-                throw new CustomException("The CPF API is unavailable.", HttpStatus.SERVICE_UNAVAILABLE);
+                throw new MappedException("The CPF API is unavailable.", HttpStatus.SERVICE_UNAVAILABLE);
             throw e;
         }
     }

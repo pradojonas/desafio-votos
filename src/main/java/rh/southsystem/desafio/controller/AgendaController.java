@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import rh.southsystem.desafio.dto.AgendaDTO;
+import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.service.AgendaService;
 
 @RestController
@@ -36,9 +37,9 @@ public class AgendaController {
     AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) {
         try {
             return service.add(newAgendaDTO);
-        } catch (IllegalArgumentException e) {
+        } catch (MappedException e) {
             // TODO: Use @RestControllerAdvice in all Controllers for Exception Handle (https://www.bezkoder.com/spring-boot-restcontrolleradvice/#RestControllerAdvice_with_ResponseEntity)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
