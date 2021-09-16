@@ -41,7 +41,7 @@ public class VoteController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (CustomException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Generic error");
         }
