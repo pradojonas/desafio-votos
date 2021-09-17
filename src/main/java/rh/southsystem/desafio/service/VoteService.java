@@ -120,7 +120,7 @@ public class VoteService {
             var cause = Exceptions.unwrap(e);
             if (cause instanceof WebClientRequestException
                 || cause instanceof TimeoutException)
-                throw new MappedException(String.format("The CPF API (%s) is unavailable.",
+                throw new MappedException(String.format("The CPF API (%s) is unavailable. Please, try again later.",
                                                         urlWithParameters), HttpStatus.SERVICE_UNAVAILABLE);
             throw e;
         }
