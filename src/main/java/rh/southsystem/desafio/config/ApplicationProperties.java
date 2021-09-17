@@ -23,6 +23,20 @@ public class ApplicationProperties {
 
     @Value("${api.valid.vote.timeout.seconds}")
     private Long cpfApiTimeout;
+    
+    @Value("${kafka.path.server}")
+    private String kafkaServerPath;
+    
+    @Value("${kafka.session.topic}")
+    private String kafkaSessionTopic;
+
+    public String getKafkaSessionTopic() {
+        return kafkaSessionTopic;
+    }
+
+    public void setKafkaSessionTopic(String kafkaSessionTopic) {
+        this.kafkaSessionTopic = kafkaSessionTopic;
+    }
 
     public String getEnv() {
         return env;
@@ -30,6 +44,14 @@ public class ApplicationProperties {
 
     public void setEnv(String env) {
         this.env = env;
+    }
+
+    public Long getSessionDurationSeconds() {
+        return sessionDurationSeconds;
+    }
+
+    public void setSessionDurationSeconds(Long sessionDurationSeconds) {
+        this.sessionDurationSeconds = sessionDurationSeconds;
     }
 
     public String getCpfApiUrl() {
@@ -40,15 +62,19 @@ public class ApplicationProperties {
         this.cpfApiUrl = cpfApiUrl;
     }
 
-    public Long getSessionDurationSeconds() {
-        return sessionDurationSeconds;
-    }
-
-    public void setSessionDurationSeconds(Long sessionDuration) {
-        this.sessionDurationSeconds = sessionDuration;
-    }
-
     public Long getCpfApiTimeout() {
         return cpfApiTimeout;
+    }
+
+    public void setCpfApiTimeout(Long cpfApiTimeout) {
+        this.cpfApiTimeout = cpfApiTimeout;
+    }
+
+    public String getKafkaServerPath() {
+        return kafkaServerPath;
+    }
+
+    public void setKafkaServerPath(String kafkaServerPath) {
+        this.kafkaServerPath = kafkaServerPath;
     }
 }
