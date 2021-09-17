@@ -74,8 +74,8 @@ public class VotingSessionService {
         return entity;
     }
 
-    // Runs every 30 seconds
-    @Scheduled(cron = "*/30 * * * * *")
+    // Runs every minute
+    @Scheduled(cron = "0 * * * * *")
     private void closeVotingSessions() throws MappedException {
         System.out.println("Checking open sessions at " + Instant.now());
         var sessionsToClose = this.findExpiredOpenSessions();
