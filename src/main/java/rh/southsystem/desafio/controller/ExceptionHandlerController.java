@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import rh.southsystem.desafio.exceptions.MappedException;
 
 @RestControllerAdvice
-public class ControllerExceptionHandler {
+public class ExceptionHandlerController {
 
     @ExceptionHandler(value = { MappedException.class })
     @ResponseBody
@@ -20,6 +20,6 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = { Throwable.class })
     @ResponseBody
     public ResponseEntity<?> handleUnmappedException(Throwable e) {
-        return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<String>("Sorry, an error has occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
