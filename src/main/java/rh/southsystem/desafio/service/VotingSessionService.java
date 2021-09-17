@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import rh.southsystem.desafio.config.ApplicationProperties;
@@ -39,7 +40,8 @@ public class VotingSessionService {
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaService.getById(newVotingSessionDTO.getIdAgenda()));
         try {
-            this.save(newVotingSession);
+            this.validateVotingSession(newVotingSession);
+            sessionRepo.save(newVotingSession);
         } catch (DataIntegrityViolationException e) {
             VotingSession currentSession = sessionRepo.findByAgendaId(newVotingSessionDTO.getIdAgenda());
             var           message        = "There's already a voting session for this agenda (sessionId = "
@@ -47,11 +49,6 @@ public class VotingSessionService {
             throw new MappedException(message, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return VotingSessionMapper.INSTANCE.fromEntity(newVotingSession);
-    }
-
-    private void save(VotingSession newVotingSession) throws MappedException {
-        this.validateVotingSession(newVotingSession);
-        sessionRepo.save(newVotingSession);
     }
 
     private void validateVotingSession(VotingSession newVotingSession) throws MappedException {
@@ -72,5 +69,21 @@ public class VotingSessionService {
                                                                        + idVotingSession + ").",
                                                                        HttpStatus.BAD_REQUEST));
         return entity;
+    }
+
+    // Runs every 30 seconds
+    @Scheduled(cron = "*/30 * * * * *")
+    private void closeVotingSessions() throws MappedException {
+        System.out.println("Checking open sessions at " + Instant.now());
+        var sessionsToClose = this.findExpiredOpenSessions();
+        for (VotingSession votingSession : sessionsToClose) {
+            votingSession.setClosed(true);
+            System.out.println(String.format("Closing session (id = %s)", votingSession.getId()));
+            sessionRepo.save(votingSession);
+        }
+    }
+
+    private List<VotingSession> findExpiredOpenSessions() {
+        return sessionRepo.findExpiredOpenSessions();
     }
 }

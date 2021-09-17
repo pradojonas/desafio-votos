@@ -35,18 +35,18 @@ public class VotingSession {
     private Long id;
 
     @NotNull
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_agenda", nullable = false)
+    private Agenda agenda;
+    
+    @NotNull
     @Column(name = "dt_end_session_UTC", nullable = false)
     @JsonDeserialize(using = InstantDeserializer.class)
     @JsonSerialize(using = InstantSerializer.class)
     private Instant endSession;
     
     @NotNull
-    @Column(name = "closed")
+    @Column(name = "closed", nullable = false)
     private Boolean closed;
-
-    @NotNull
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_agenda", nullable = false)
-    private Agenda agenda;
 
 }
