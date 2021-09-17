@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import rh.southsystem.desafio.config.ApplicationProperties;
 import rh.southsystem.desafio.dto.VotingSessionPostDTO;
+import rh.southsystem.desafio.enums.DecisionEnum;
 import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.mappers.VotingSessionMapper;
 import rh.southsystem.desafio.model.VotingSession;
@@ -21,11 +22,13 @@ import rh.southsystem.desafio.repository.VotingSessionRepository;
 public class VotingSessionService {
 
     @Autowired
+    private ApplicationProperties   appProps;
+    @Autowired
     private VotingSessionRepository sessionRepo;
     @Autowired
     private AgendaService           agendaService;
     @Autowired
-    private ApplicationProperties   appProps;
+    private VoteService             voteService;
 
     public List<VotingSessionPostDTO> list() {
         var modelList = sessionRepo.findAll();
@@ -81,9 +84,37 @@ public class VotingSessionService {
             System.out.println(String.format("Closing session (id = %s)", votingSession.getId()));
             sessionRepo.save(votingSession);
 
-            // TODO: Contabilizar votos de uma sessão
+            var result = this.findSessionScore(votingSession.getId());
+            if (result > 0)
+                System.out.println(String.format("Session had a SIM result (id = %s)",
+                                                 votingSession.getId()));
+            else if (result < 0)
+                System.out.println(String.format("Session had a NAO result (id = %s)",
+                                                 votingSession.getId()));
+            else
+                System.out.println(String.format("Session had a draw result (id = %s)",
+                                                 votingSession.getId()));
+
             // TODO: Utilizar mensageria para reportar o resultado de uma sessão encerrada
         }
+    }
+
+    // Returns 0 in case of draw, otherwise returns number of 'SIM' votes minus 'NAO' votes
+    private long findSessionScore(Long idVotingSession) {
+        List<DecisionEnum> decisions = voteService.countVotesForSession(idVotingSession);
+        Long               result    = 0L;
+        for (DecisionEnum cursor : decisions) {
+            switch (cursor) {
+            case SIM:
+                result++;
+                continue;
+            case NAO:
+                result--;
+                continue;
+            }
+        }
+
+        return result;
     }
 
     private List<VotingSession> findExpiredOpenSessions() {

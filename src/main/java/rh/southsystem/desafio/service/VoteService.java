@@ -23,6 +23,7 @@ import rh.southsystem.desafio.config.ApplicationProperties;
 import rh.southsystem.desafio.dto.CpfApiDTO;
 import rh.southsystem.desafio.dto.VoteDTO;
 import rh.southsystem.desafio.enums.CanVoteEnum;
+import rh.southsystem.desafio.enums.DecisionEnum;
 import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.mappers.VoteMapper;
 import rh.southsystem.desafio.model.Associate;
@@ -53,8 +54,12 @@ public class VoteService {
     }
 
     public List<VoteDTO> listByVotingSession(Long idVotingSession) {
-        List<Vote> votes = voteRepo.findByVotindSession(idVotingSession);;
+        List<Vote> votes = voteRepo.findByVotindSession(idVotingSession);
         return VoteMapper.INSTANCE.fromEntityList(votes);
+    }
+    
+    public List<DecisionEnum> countVotesForSession(Long idVotingSession) {
+        return voteRepo.countVotesForSession(idVotingSession);
     }
 
     public VoteDTO vote(VoteDTO newVoteDTO) throws MappedException {

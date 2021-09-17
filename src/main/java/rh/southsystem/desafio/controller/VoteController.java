@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rh.southsystem.desafio.dto.VoteDTO;
 import rh.southsystem.desafio.exceptions.MappedException;
-import rh.southsystem.desafio.model.Vote;
 import rh.southsystem.desafio.service.VoteService;
 
 @RestController
