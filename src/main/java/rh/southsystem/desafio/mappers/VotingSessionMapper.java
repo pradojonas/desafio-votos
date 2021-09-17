@@ -18,6 +18,7 @@ public interface VotingSessionMapper {
     static final long   ROUND_DURATION = 60;
 
     @Mapping(target = "agenda", ignore = true) // Handled in Service Class
+    @Mapping(target = "closed", expression = "java(false)")
     @Mapping(source = "minutesDuration", target = "endSession", qualifiedByName = "setEndSession")
     VotingSession fromDTO(VotingSessionPostDTO sDto);
 

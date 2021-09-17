@@ -39,6 +39,10 @@ public class VotingSession {
     @JsonDeserialize(using = InstantDeserializer.class)
     @JsonSerialize(using = InstantSerializer.class)
     private Instant endSession;
+    
+    @NotNull
+    @Column(name = "closed")
+    private Boolean closed;
 
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)

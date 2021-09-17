@@ -8,7 +8,6 @@ import lombok.Setter;
 public class VotingSessionPostDTO {
 
     private Long id;
-
     private Long idAgenda;
     private Long minutesDuration;
 }
