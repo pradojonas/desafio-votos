@@ -9,5 +9,5 @@ public class AssociateDTO {
 
     private Long id;
 
-    private Long cpf;
+    private String cpf;
 }
