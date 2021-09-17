@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rh.southsystem.desafio.dto.VoteDTO;
 import rh.southsystem.desafio.exceptions.MappedException;
+import rh.southsystem.desafio.model.Vote;
 import rh.southsystem.desafio.service.VoteService;
 
 @RestController
@@ -26,15 +28,16 @@ public class VoteController {
     public List<VoteDTO> list() {
         return service.list();
     }
+    
+    @GetMapping("session/{idSession}")
+    public List<VoteDTO> listByVotingSession(@PathVariable long idSession) {
+        return service.listByVotingSession(idSession);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     VoteDTO vote(@RequestBody VoteDTO newVoteDTO) throws MappedException {
         return service.vote(newVoteDTO);
     }
-
-    // TODO: Contabilizar votos de uma sessão
-    
-    // TODO: Utilizar mensageria para reportar o resultado de uma sessão encerrada
 
 }

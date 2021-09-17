@@ -52,6 +52,11 @@ public class VoteService {
         return dtoList;
     }
 
+    public List<VoteDTO> listByVotingSession(Long idVotingSession) {
+        List<Vote> votes = voteRepo.findByVotindSession(idVotingSession);;
+        return VoteMapper.INSTANCE.fromEntityList(votes);
+    }
+
     public VoteDTO vote(VoteDTO newVoteDTO) throws MappedException {
 
         Vote newVote = VoteMapper.INSTANCE.fromDTO(newVoteDTO); // Transforming DTO in Entity

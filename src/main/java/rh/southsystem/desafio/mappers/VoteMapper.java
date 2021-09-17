@@ -1,6 +1,7 @@
 package rh.southsystem.desafio.mappers;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,4 +29,6 @@ public interface VoteMapper {
     public static Instant durationMinutesToDateTime(DecisionEnum dummyParameter) {
         return Instant.now();
     }
+
+    List<VoteDTO> fromEntityList(List<Vote> votes);
 }

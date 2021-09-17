@@ -80,6 +80,9 @@ public class VotingSessionService {
             votingSession.setClosed(true);
             System.out.println(String.format("Closing session (id = %s)", votingSession.getId()));
             sessionRepo.save(votingSession);
+
+            // TODO: Contabilizar votos de uma sessão
+            // TODO: Utilizar mensageria para reportar o resultado de uma sessão encerrada
         }
     }
 
