@@ -11,7 +11,7 @@ import rh.southsystem.desafio.dto.AssociateDTO;
 import rh.southsystem.desafio.service.AssociateService;
 
 @RestController
-@RequestMapping("/associate")
+@RequestMapping("/v1/associate")
 public class AssociateController {
 
     @Autowired

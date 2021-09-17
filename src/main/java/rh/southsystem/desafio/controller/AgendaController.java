@@ -16,7 +16,7 @@ import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.service.AgendaService;
 
 @RestController
-@RequestMapping("/agenda")
+@RequestMapping("/v1/agenda")
 public class AgendaController {
 
     @Autowired

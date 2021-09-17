@@ -16,7 +16,7 @@ import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.service.VotingSessionService;
 
 @RestController
-@RequestMapping("/session")
+@RequestMapping("/v1/session")
 public class VotingSessionController {
 
     @Autowired
