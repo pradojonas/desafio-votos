@@ -16,6 +16,8 @@ public class DesafioVotosApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DesafioVotosApplication.class, args);
+        // TODO: Logger
+        // TODO: Documentar métodos dos controllers (Swagger-ui)
     }
 
     @EventListener(ContextRefreshedEvent.class)
