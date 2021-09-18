@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import rh.southsystem.desafio.dto.AgendaDTO;
 import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.service.AgendaService;
@@ -24,11 +25,13 @@ public class AgendaController {
     @Autowired
     AgendaService service;
 
+    @ApiOperation(value="Lists Agendas", response = AgendaDTO.class)
     @GetMapping
     public List<AgendaDTO> list() {
         return service.list();
     }
 
+    @ApiOperation(value="Creates an Agenda", response = AgendaDTO.class)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     AgendaDTO add(@RequestBody AgendaDTO newAgendaDTO) throws MappedException {
