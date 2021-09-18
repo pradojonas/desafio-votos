@@ -25,7 +25,7 @@ public class AgendaController {
     @Autowired
     AgendaService service;
 
-    @ApiOperation(value="Lists Agendas", response = AgendaDTO.class)
+    @ApiOperation(value="Lists all Agendas", response = AgendaDTO.class)
     @GetMapping
     public List<AgendaDTO> list() {
         return service.list();
