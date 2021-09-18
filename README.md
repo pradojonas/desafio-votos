@@ -49,3 +49,16 @@ Por fim, abra um terminal na raiz do projeto e execute:
 Uma vez executado com sucesso, uma interface do Swagger-Ui estará disponível no endereço [localhost:8080/swagger-ui.html](localhost:8080/swagger-ui.html).
 
 Essa interface pode ser utilizada tanto para visualização da descrição dos endpoints da API, quanto para execução dos mesmos.
+
+## Linguagem, Frameworks e Ferramentas
+
+- Java 11
+- Maven
+- Spring e Spring Boot
+- H2 e PostgreSQL
+- Mapstruct
+- Spring Kafka
+- Docker para hospedagem do banco de dados (Opcional)
+- SpringFox (Swagger)
+- TODO: LOGGER
+- TODO: TEST SUIT
