@@ -1,34 +1,24 @@
 package rh.southsystem.desafio.service;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 
-import reactor.core.Exceptions;
-import reactor.core.publisher.Mono;
-import rh.southsystem.desafio.config.ApplicationProperties;
-import rh.southsystem.desafio.dto.CpfApiDTO;
 import rh.southsystem.desafio.dto.VoteDTO;
-import rh.southsystem.desafio.enums.CanVoteEnum;
 import rh.southsystem.desafio.enums.DecisionEnum;
 import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.mappers.VoteMapper;
 import rh.southsystem.desafio.model.Associate;
 import rh.southsystem.desafio.model.Vote;
 import rh.southsystem.desafio.repository.VoteRepository;
+import rh.southsystem.desafio.service.external.CpfCheckerService;
 
 @Service
 public class VoteService {
@@ -43,7 +33,7 @@ public class VoteService {
     private AssociateService associateService;
 
     @Autowired
-    private ApplicationProperties appProps;
+    private CpfCheckerService cpfApiService;
 
     public List<VoteDTO> list() {
         var modelList = voteRepo.findAll();
@@ -57,7 +47,7 @@ public class VoteService {
         List<Vote> votes = voteRepo.findByVotindSession(idVotingSession);
         return VoteMapper.INSTANCE.fromEntityList(votes);
     }
-    
+
     public List<DecisionEnum> countVotesForSession(Long idVotingSession) {
         return voteRepo.countVotesForSession(idVotingSession);
     }
@@ -97,42 +87,7 @@ public class VoteService {
             throw new MappedException(String.format("Voting Session is already closed (id = %s).",
                                                     newVote.getVotingSession().getId()), HttpStatus.GONE);
 
-        this.validateCpfUsingAPI(newVote.getAssociate().getCpf());
+        cpfApiService.validateCpfUsingAPI(newVote.getAssociate().getCpf());
 
-    }
-
-    // Check if CPF can vote using API
-    private void validateCpfUsingAPI(String cpf) throws MappedException {
-        String urlWithParameters = appProps.getCpfApiUrl().replace("{cpf}", cpf);
-
-        try {
-            WebClient webClient = WebClient.builder()
-                                           .baseUrl(urlWithParameters)
-                                           .defaultHeader(HttpHeaders.CONTENT_TYPE,
-                                                          MediaType.APPLICATION_JSON_VALUE)
-                                           .build();
-            CpfApiDTO result    = webClient.get()
-                                           .retrieve()
-                                           .onStatus(obtainedCode -> obtainedCode.equals(HttpStatus.NOT_FOUND),
-                                                     request -> Mono.error(new MappedException(String.format("The CPF '%s' is invalid.",
-                                                                                                             cpf),
-                                                                                               HttpStatus.BAD_REQUEST)))
-                                           .bodyToMono(CpfApiDTO.class)
-                                           .timeout(Duration.ofSeconds(appProps.getCpfApiTimeout()))
-                                           .block();
-            System.out.println(cpf + ": " + result.getStatus());
-            // TODO: Replace prints with logger
-            if (result.getStatus() != CanVoteEnum.ABLE_TO_VOTE)
-                throw new MappedException(String.format("This associate (CPF = %s) is unable to vote.", cpf),
-                                          HttpStatus.FORBIDDEN);
-        } catch (RuntimeException e) {
-            // Thrown by 'block()'
-            var cause = Exceptions.unwrap(e);
-            if (cause instanceof WebClientRequestException
-                || cause instanceof TimeoutException)
-                throw new MappedException(String.format("The CPF API (%s) is unavailable. Please, try again later.",
-                                                        urlWithParameters), HttpStatus.SERVICE_UNAVAILABLE);
-            throw e;
-        }
     }
 }

@@ -2,23 +2,15 @@ package rh.southsystem.desafio.service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaException;
-import org.apache.kafka.common.serialization.LongSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import org.apache.kafka.common.serialization.StringSerializer;
 
 import rh.southsystem.desafio.config.ApplicationProperties;
 import rh.southsystem.desafio.dto.VotingSessionPostDTO;
@@ -27,6 +19,7 @@ import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.mappers.VotingSessionMapper;
 import rh.southsystem.desafio.model.VotingSession;
 import rh.southsystem.desafio.repository.VotingSessionRepository;
+import rh.southsystem.desafio.service.external.KafkaService;
 
 @Service
 public class VotingSessionService {
@@ -39,6 +32,8 @@ public class VotingSessionService {
     private AgendaService           agendaService;
     @Autowired
     private VoteService             voteService;
+    @Autowired
+    private KafkaService            kafkaService;
 
     public List<VotingSessionPostDTO> list() {
         var modelList = sessionRepo.findAll();
@@ -107,39 +102,8 @@ public class VotingSessionService {
                                         Instant.now(),
                                         votingSession.getId());
 
-            try {
-                this.sendKafkaMessage(votingSession.getId(), message);
-            } catch (KafkaException | InterruptedException | ExecutionException e) {
-                System.out.println("Error sending message to Kafka"); // TODO: use Logger instead
-                e.printStackTrace();
-            }
+            kafkaService.sendKafkaMessage(votingSession.getId(), message);
         }
-    }
-
-    private void sendKafkaMessage(Long idSession, String message) throws KafkaException,
-                                                                  InterruptedException,
-                                                                  ExecutionException {
-        // TODO: Configure Logger to hide Kafka configuration information
-        var producer = new KafkaProducer<Long, String>(this.kafkaProperties());
-        var record   = new ProducerRecord<>(appProps.getKafkaSessionTopic(), idSession, message);
-        System.out.println(String.format("Sending to Kafka: %s", message));
-        producer.send(record, (data, ex) -> {
-            if (ex != null) {
-                return; // TODO: Check if theres a problem here
-            }
-            System.out.println(String.format("Message sent for topic %S at offset %s",
-                                             data.topic(),
-                                             data.offset()));
-        }).get();
-    }
-
-    private Properties kafkaProperties() {
-        var properties = new Properties();
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, appProps.getKafkaServerPath());
-        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
-        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                               StringSerializer.class.getName());
-        return properties;
     }
 
     // Returns 0 in case of draw, otherwise returns number of 'SIM' votes minus 'NAO' votes

@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import rh.southsystem.desafio.dto.AgendaDTO;
 import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.service.AgendaService;
 
 @RestController
 @RequestMapping("/v1/agenda")
+@Api(value = "API Agenda")
 public class AgendaController {
 
     @Autowired
