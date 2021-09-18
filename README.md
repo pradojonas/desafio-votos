@@ -42,4 +42,6 @@ Após essa sequência, a instância de banco estará pronta para ser utilizada. 
 
 #### Como utilizar a API
 
-TODO: link de acesso utilizando versionamento
+TODO: Add link para a API em funcionamento
+
+TODO: Add link swagger

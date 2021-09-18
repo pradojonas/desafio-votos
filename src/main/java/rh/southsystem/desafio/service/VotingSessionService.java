@@ -95,11 +95,17 @@ public class VotingSessionService {
             sessionRepo.save(votingSession);
 
             var result  = this.findSessionScore(votingSession.getId());
-            var message = String.format("Session had a draw result (id = %s)", votingSession.getId());
+            var message = String.format("Session had a draw result at Instant %s (id = %s)",
+                                        Instant.now(),
+                                        votingSession.getId());
             if (result > 0)
-                message = String.format("Session had a SIM result (id = %s)", votingSession.getId());
+                message = String.format("Session had a SIM result at Instant %s (id = %s)",
+                                        Instant.now(),
+                                        votingSession.getId());
             else if (result < 0)
-                message = String.format("Session had a NAO result (id = %s)", votingSession.getId());
+                message = String.format("Session had a NAO result at Instant %s (id = %s)",
+                                        Instant.now(),
+                                        votingSession.getId());
 
             try {
                 this.sendKafkaMessage(votingSession.getId(), message);
@@ -116,7 +122,7 @@ public class VotingSessionService {
         // TODO: Configure Logger to hide Kafka configuration information
         var producer = new KafkaProducer<Long, String>(this.kafkaProperties());
         var record   = new ProducerRecord<>(appProps.getKafkaSessionTopic(), idSession, message);
-        System.out.println(String.format("Enviando para o Kafka: %s", message));
+        System.out.println(String.format("Sending to Kafka: %s", message));
         producer.send(record, (data, ex) -> {
             if (ex != null) {
                 return; // TODO: Check if theres a problem here
