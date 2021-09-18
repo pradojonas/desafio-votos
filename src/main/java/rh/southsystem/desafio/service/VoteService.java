@@ -62,20 +62,20 @@ public class VoteService {
             Associate newAssociate = associateService.createAssociate(newVoteDTO.getCpf());
             newVote.setAssociate(newAssociate);
         }
+        this.save(newVote);
+        return VoteMapper.INSTANCE.fromEntity(newVote);
+    }
+
+    private void save(Vote newVote) throws MappedException {
+        this.validateVote(newVote);
         try {
-            this.save(newVote);
+            voteRepo.save(newVote);
         } catch (DataIntegrityViolationException e) {
             String message = String.format("There's already a vote for this associate (cpf = %s) in this session (id = %s).",
                                            newVote.getAssociate().getCpf(),
                                            newVote.getVotingSession().getId());
             throw new MappedException(message, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return VoteMapper.INSTANCE.fromEntity(newVote);
-    }
-
-    private void save(Vote newVote) throws MappedException {
-        this.validateVote(newVote);
-        voteRepo.save(newVote);
     }
 
     private void validateVote(Vote newVote) throws MappedException {

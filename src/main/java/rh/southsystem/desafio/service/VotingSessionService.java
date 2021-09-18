@@ -2,10 +2,8 @@ package rh.southsystem.desafio.service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import org.apache.kafka.common.KafkaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -47,8 +45,8 @@ public class VotingSessionService {
 
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaService.getById(newVotingSessionDTO.getIdAgenda()));
+        this.validateVotingSession(newVotingSession);
         try {
-            this.validateVotingSession(newVotingSession);
             sessionRepo.save(newVotingSession);
         } catch (DataIntegrityViolationException e) {
             VotingSession currentSession = sessionRepo.findByAgendaId(newVotingSessionDTO.getIdAgenda());
