@@ -10,8 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @PropertySource(value = "classpath:/app-${spring.profiles.active}.properties", ignoreResourceNotFound = false)
 public class ApplicationProperties {
 
-    // TODO: Configure Swagger
-
     @Value("${profile.env}")
     private String env;
 
