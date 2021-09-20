@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,8 @@ public class VotingSessionService {
     private VoteService             voteService;
     @Autowired
     private KafkaService            kafkaService;
+
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public List<VotingSessionDTO> list() {
         var modelList = sessionRepo.findAll();
@@ -80,11 +84,11 @@ public class VotingSessionService {
     // Runs every minute
     @Scheduled(cron = "0 * * * * *")
     private void closeVotingSessions() throws MappedException {
-        System.out.println("Checking open sessions at " + Instant.now());
+        LOGGER.info("Checking open sessions at " + Instant.now());
         var sessionsToClose = this.findExpiredOpenSessions();
         for (VotingSession votingSession : sessionsToClose) {
             votingSession.setClosed(true);
-            System.out.println(String.format("Closing session (id = %s)", votingSession.getId()));
+            LOGGER.info(String.format("Closing session (id = %s)", votingSession.getId()));
             sessionRepo.save(votingSession);
 
             var result  = this.findSessionScore(votingSession.getId());

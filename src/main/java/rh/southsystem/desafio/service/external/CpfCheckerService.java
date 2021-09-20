@@ -3,6 +3,8 @@ package rh.southsystem.desafio.service.external;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,8 @@ public class CpfCheckerService {
     @Autowired
     private ApplicationProperties appProps;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
     public void validateCpfUsingAPI(String cpf) throws MappedException {
         String urlWithParameters = appProps.getCpfApiUrl().replace("{cpf}", cpf);
 
@@ -42,8 +46,7 @@ public class CpfCheckerService {
                                            .bodyToMono(CpfApiDTO.class)
                                            .timeout(Duration.ofSeconds(appProps.getCpfApiTimeout()))
                                            .block();
-            System.out.println(cpf + ": " + result.getStatus());
-            // TODO: Replace prints with logger
+            LOGGER.info(String.format("API result for CPF %s: %s", cpf, result.getStatus()));
             if (result.getStatus() != CanVoteEnum.ABLE_TO_VOTE)
                 throw new MappedException(String.format("This associate (CPF = %s) is unable to vote.", cpf),
                                           HttpStatus.FORBIDDEN);
