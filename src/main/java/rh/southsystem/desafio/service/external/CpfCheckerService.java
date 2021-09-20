@@ -20,10 +20,10 @@ import rh.southsystem.desafio.exceptions.MappedException;
 
 @Service
 public class CpfCheckerService {
-    
+
     @Autowired
-    private ApplicationProperties   appProps;
-    
+    private ApplicationProperties appProps;
+
     public void validateCpfUsingAPI(String cpf) throws MappedException {
         String urlWithParameters = appProps.getCpfApiUrl().replace("{cpf}", cpf);
 
@@ -50,11 +50,13 @@ public class CpfCheckerService {
         } catch (RuntimeException e) {
             // Thrown by 'block()'
             var cause = Exceptions.unwrap(e);
+            if (cause instanceof MappedException) {
+                throw (MappedException) cause;
+            }
             if (cause instanceof WebClientRequestException
                 || cause instanceof TimeoutException)
                 throw new MappedException(String.format("The CPF API (%s) is unavailable. Please, try again later.",
                                                         urlWithParameters), HttpStatus.SERVICE_UNAVAILABLE);
-            throw e;
         }
     }
 

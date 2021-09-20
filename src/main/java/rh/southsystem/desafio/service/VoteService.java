@@ -88,6 +88,5 @@ public class VoteService {
                                                     newVote.getVotingSession().getId()), HttpStatus.GONE);
 
         cpfApiService.validateCpfUsingAPI(newVote.getAssociate().getCpf());
-
     }
 }

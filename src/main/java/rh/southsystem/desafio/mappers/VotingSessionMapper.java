@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
-import rh.southsystem.desafio.dto.VotingSessionPostDTO;
+import rh.southsystem.desafio.dto.VotingSessionDTO;
 import rh.southsystem.desafio.model.Agenda;
 import rh.southsystem.desafio.model.VotingSession;
 
@@ -20,7 +20,7 @@ public interface VotingSessionMapper {
     @Mapping(target = "agenda", ignore = true) // Handled in Service Class
     @Mapping(target = "closed", expression = "java(false)")
     @Mapping(source = "minutesDuration", target = "endSession", qualifiedByName = "setEndSession")
-    VotingSession fromDTO(VotingSessionPostDTO sDto);
+    VotingSession fromDTO(VotingSessionDTO sDto);
 
     @Named("setEndSession")
     public static Instant setEndSession(Long minutesDuration) {
@@ -31,7 +31,7 @@ public interface VotingSessionMapper {
 
     @Mapping(source = "endSession", target = "minutesDuration", qualifiedByName = "instantToRemainingMinutes")
     @Mapping(source = "agenda", target = "idAgenda", qualifiedByName = "getIdAgenda")
-    VotingSessionPostDTO fromEntity(VotingSession s);
+    VotingSessionDTO fromEntity(VotingSession s);
 
     @Named("instantToRemainingMinutes")
     public static Long instantToRemainingMinutes(Instant sourceEndTime) {

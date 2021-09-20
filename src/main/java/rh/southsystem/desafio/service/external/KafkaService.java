@@ -36,7 +36,6 @@ public class KafkaService {
             }).get();
         } catch (KafkaException | InterruptedException | ExecutionException e) {
             System.out.println("Error sending message to Kafka"); // TODO: use Logger instead
-            e.printStackTrace();
         }
     }
 

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import rh.southsystem.desafio.exceptions.MappedException;
-import springfox.documentation.annotations.ApiIgnore;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {

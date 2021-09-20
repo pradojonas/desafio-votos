@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class VotingSessionPostDTO {
+public class VotingSessionDTO {
 
     private Long id;
     private Long idAgenda;

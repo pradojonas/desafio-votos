@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import rh.southsystem.desafio.config.ApplicationProperties;
-import rh.southsystem.desafio.dto.VotingSessionPostDTO;
+import rh.southsystem.desafio.dto.VotingSessionDTO;
 import rh.southsystem.desafio.enums.DecisionEnum;
 import rh.southsystem.desafio.exceptions.MappedException;
 import rh.southsystem.desafio.mappers.VotingSessionMapper;
@@ -33,7 +33,7 @@ public class VotingSessionService {
     @Autowired
     private KafkaService            kafkaService;
 
-    public List<VotingSessionPostDTO> list() {
+    public List<VotingSessionDTO> list() {
         var modelList = sessionRepo.findAll();
         var dtoList   = modelList.stream()
                                  .map(entity -> VotingSessionMapper.INSTANCE.fromEntity(entity))
@@ -41,7 +41,7 @@ public class VotingSessionService {
         return dtoList;
     }
 
-    public VotingSessionPostDTO create(VotingSessionPostDTO newVotingSessionDTO) throws MappedException {
+    public VotingSessionDTO create(VotingSessionDTO newVotingSessionDTO) throws MappedException {
 
         VotingSession newVotingSession = VotingSessionMapper.INSTANCE.fromDTO(newVotingSessionDTO); // Transforming DTO in Entity
         newVotingSession.setAgenda(agendaService.getById(newVotingSessionDTO.getIdAgenda()));

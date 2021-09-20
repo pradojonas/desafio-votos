@@ -30,12 +30,13 @@ Diferentemente do anterior, o perfil de produção (*prod*) faz persistência de
 
 É possível subir uma instância via Docker, utilizando o arquivo *docker-compose.yml* na raiz desse projeto. Para isso, siga os seguintes passos: 
 
-
 1. Abra o arquivo *docker-compose.yml* que se encontra na raiz do projeto;
 2. Altere o caminho do volume Docker para um diretório válido, onde serão armazenados os dados da aplicação (Ex: /home/mustella/dockerData/PostgreSQL/);
 3. Garanta que a porta 5433 está disponível; caso não esteja, insira uma porta livre em *docker-compose.yml* e *app-prod.properties*;
 4. Garanta que o serviço Docker está disponível através do comando: `docker info`
 5. Abra o terminal no diretório onde está o *docker-compose.yml* e execute o comando: `docker-compose up -d`
+
+TODO: Setar profile dev quando rodar os testes
 
 Após essa sequência, a instância de banco estará pronta para ser utilizada.
 

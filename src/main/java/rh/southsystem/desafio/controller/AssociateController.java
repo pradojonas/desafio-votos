@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
-import rh.southsystem.desafio.dto.AgendaDTO;
 import rh.southsystem.desafio.dto.AssociateDTO;
 import rh.southsystem.desafio.service.AssociateService;
 
@@ -21,7 +20,7 @@ public class AssociateController {
 
     @ApiOperation(value="Lists all Associates", response = AssociateDTO.class)
     @GetMapping
-    public List<AssociateDTO> list() {
+    List<AssociateDTO> list() {
         return service.list();
     }
 }
