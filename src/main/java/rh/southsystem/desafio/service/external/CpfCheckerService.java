@@ -46,7 +46,7 @@ public class CpfCheckerService {
                                            .bodyToMono(CpfApiDTO.class)
                                            .timeout(Duration.ofSeconds(appProps.getCpfApiTimeout()))
                                            .block();
-            LOGGER.info(String.format("API result for CPF %s: %s", cpf, result.getStatus()));
+            LOGGER.info(String.format("CPF %s is '%s'", cpf, result.getStatus()));
             if (result.getStatus() != CanVoteEnum.ABLE_TO_VOTE)
                 throw new MappedException(String.format("This associate (CPF = %s) is unable to vote.", cpf),
                                           HttpStatus.FORBIDDEN);

@@ -15,13 +15,11 @@ public class DesafioVotosApplication {
 
     @Autowired
     ApplicationProperties appProps;
-    
+
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public static void main(String[] args) {
         SpringApplication.run(DesafioVotosApplication.class, args);
-        // TODO: Logger
-        // TODO: Test Classes
     }
 
     @EventListener(ContextRefreshedEvent.class)

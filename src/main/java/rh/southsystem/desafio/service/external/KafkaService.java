@@ -39,7 +39,7 @@ public class KafkaService {
                                                  data.offset()));
             }).get();
         } catch (KafkaException | InterruptedException | ExecutionException e) {
-            LOGGER.info("Error sending message to Kafka"); // TODO: use Logger instead
+            LOGGER.info("Error sending message to Kafka");
         }
     }
 

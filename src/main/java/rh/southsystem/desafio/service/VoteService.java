@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,8 @@ public class VoteService {
 
     @Autowired
     private CpfCheckerService cpfApiService;
+
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public List<VoteDTO> list() {
         var modelList = voteRepo.findAll();
@@ -70,6 +74,8 @@ public class VoteService {
         this.validateVote(newVote);
         try {
             voteRepo.save(newVote);
+            LOGGER.info(String.format("Vote successfully registered for session %d.",
+                                      newVote.getVotingSession().getId()));
         } catch (DataIntegrityViolationException e) {
             String message = String.format("There's already a vote for this associate (cpf = %s) in this session (id = %s).",
                                            newVote.getAssociate().getCpf(),
