@@ -1,17 +1,24 @@
 package rh.southsystem.desafio.config;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-@PropertySource(value = "classpath:/app-${spring.profiles.active}.properties", ignoreResourceNotFound = false)
+@PropertySources({ @PropertySource(value = "classpath:/app-${spring.profiles.active}.properties",
+                                   ignoreResourceNotFound = false) })
 public class ApplicationProperties {
 
-    @Value("${profile.env}")
-    private String env;
+    @Autowired
+    Environment env;
 
     @Value("${session.duration.seconds}")
     private Long sessionDurationSeconds; // Value in seconds
@@ -21,10 +28,10 @@ public class ApplicationProperties {
 
     @Value("${api.valid.vote.timeout.seconds}")
     private Long cpfApiTimeout;
-    
+
     @Value("${kafka.path.server}")
     private String kafkaServerPath;
-    
+
     @Value("${kafka.session.topic}")
     private String kafkaSessionTopic;
 
@@ -36,12 +43,8 @@ public class ApplicationProperties {
         this.kafkaSessionTopic = kafkaSessionTopic;
     }
 
-    public String getEnv() {
-        return env;
-    }
-
-    public void setEnv(String env) {
-        this.env = env;
+    public List<String> getEnv() {
+        return Arrays.asList(env.getActiveProfiles());
     }
 
     public Long getSessionDurationSeconds() {
