@@ -21,7 +21,7 @@ O perfil de desenvolvimento (*dev*) não demanda configuração além do Kafka, 
 
 Para executar em profile *dev*, abra um terminal na raiz do projeto e execute: 
 
-`mvn clean install`
+`mvn clean install -Dspring.profiles.active=dev`
 `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
 
 ##### Prod
@@ -42,7 +42,7 @@ Após essa sequência, a instância de banco estará pronta para ser utilizada.
 
 Por fim, abra um terminal na raiz do projeto e execute:
 
-`mvn clean install`
+`mvn clean install -Dspring.profiles.active=dev`
 `mvn spring-boot:run -Dspring-boot.run.profiles=prod`
 
 #### Como utilizar a API
@@ -61,5 +61,5 @@ Essa interface pode ser utilizada tanto para visualização da descrição dos e
 - Spring Kafka
 - Docker para hospedagem do banco de dados (Opcional)
 - SpringFox (Swagger)
-- TODO: LOGGER
-- TODO: TEST SUIT
+- Slf4j para Logs
+- MockMvc para testes
